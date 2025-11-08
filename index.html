@@ -307,7 +307,37 @@
 
 </div>
   </div>
+<style>
+/* ✅ Tab content */
+.tabcontent {
+  display: none;
+  padding: 20px;
+  text-align: center;
+  background: white;
+  border-radius: 0 0 10px 10px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+}
 
+/* ✅ Responsive Grid — no scrollbars */
+.chart-grid4 {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  gap: 12px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+/* ✅ Clean iframe — fixed height, no scrollbars */
+.chart-grid4 iframe {
+  width: 100%;
+  height: 420px;  /* no overflow */
+  border: none;
+  border-radius: 10px;
+  overflow: hidden; /* force hide scrollbars */
+}
+</style>
+
+  <!--
 <style>
   /* ✅ Responsive grid for Chart 4 */
 .chart-grid4 {
