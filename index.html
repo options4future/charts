@@ -309,6 +309,27 @@
   </div>
 
 <style>
+  /* ✅ Responsive grid for Chart 4 */
+.chart-grid4 {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr); /* 6 charts per row */
+  gap: 10px;
+  align-items: start;
+  width: 100%;
+  margin: 0 auto;
+}
+
+.chart-grid4 iframe {
+  width: 100%;
+  aspect-ratio: 1 / 1; /* Keeps charts square — auto scales */
+  border: none;
+  border-radius: 10px;
+}
+</style>
+
+<!--
+  
+<style>
 /* ✅ Chart 4 custom layout (overrides global iframe styles) */
 #chart4 .chart-grid4 {
   display: grid;
@@ -350,7 +371,7 @@
   #chart4 iframe { height: 420px !important; }
 }
 </style>
-
+-->
 
 
   <!-- ✅ Chart 8 -->
