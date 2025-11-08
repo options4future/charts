@@ -293,7 +293,7 @@
 <div id="chart4" class="tabcontent">
   <h2>OI-Amount Chart</h2>
 
-  <div class="chart-grid">
+  <div class="chart-grid4">
     
   <iframe src="https://docs.google.com/spreadsheets/d/e/2PACX-1vQwdBNIekjQua_YjtFzp4hCVs7XUHN4UilhgNG_wZy2w-gfFZUds2hr7lyqqrctXDQxtk9wKp3gRz_-/pubchart?oid=78463756&format=interactive"></iframe>
   <iframe src="https://docs.google.com/spreadsheets/d/e/2PACX-1vQwdBNIekjQua_YjtFzp4hCVs7XUHN4UilhgNG_wZy2w-gfFZUds2hr7lyqqrctXDQxtk9wKp3gRz_-/pubchart?oid=1355325851&format=interactive"></iframe>
@@ -309,23 +309,23 @@
   </div>
 
 
-  <!--
 <style>
-  /* ✅ Responsive grid for Chart 4 */
+/* One chart per row—only for iframe4 */
 .chart-grid4 {
   display: grid;
-  grid-template-columns: repeat(2, 1fr); /* 6 charts per row */
-  gap: 10px;
-  align-items: start;
+  grid-template-columns: 1fr; 
+  gap: 12px;
   width: 100%;
   margin: 0 auto;
 }
 
-.chart-grid4 iframe {
+/* Only apply style to iframe4 */
+.iframe4 {
   width: 100%;
-  aspect-ratio: 1 / 1; /* Keeps charts square — auto scales */
+  height: 550px;   /* Adjust height manually */
   border: none;
   border-radius: 10px;
+  overflow: hidden;  /* prevent scrollbars */
 }
 </style>
 
