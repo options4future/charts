@@ -315,23 +315,26 @@
 
 
 <style>
-/* One chart per row—only for iframe4 */
+/* One chart per row */
 .chart-grid4 {
   display: grid;
-  grid-template-columns: 1fr; 
+  grid-template-columns: 1fr;
+  justify-items: center;   /* ✅ centers the iframe horizontally */
   gap: 12px;
   width: 100%;
   margin: 0 auto;
 }
 
-/* Only apply style to iframe4 */
+/* iframe4 specific style */
 .iframe4 {
-  width: 100%;
-  height: 800px;   /* Adjust height manually */
+  width: 800px;     /* ✅ FIXED WIDTH */
+  height: 800px;    /* your chosen height */
+  max-width: 100%;  /* Prevent overflow on mobile */
   border: none;
   border-radius: 10px;
-  overflow: hidden;  /* prevent scrollbars */
+  overflow: hidden;
 }
+
 </style>
 
 <!--
