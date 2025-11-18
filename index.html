@@ -447,7 +447,59 @@ const chart1 = {
 };
 
 
+const baseURL1 = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQwdBNIekjQua_YjtFzp4hCVs7XUHN4UilhgNG_wZy2w-gfFZUds2hr7lyqqrctXDQxtk9wKp3gRz_-/pubchart?format=interactive&oid=";
 
+const checkboxContainer1 = document.getElementById("checkboxes-chart1");
+const chartContainer1 = document.getElementById("chart-grid-chart1");
+
+Object.entries(chart1).forEach(([strike, oid]) => {
+
+  const cbLabel = document.createElement("label");
+  cbLabel.innerHTML = `
+    <input type="checkbox" id="cb1-strike${strike}" onchange="toggleChart1('${strike}')" checked>
+    ${strike}
+  `;
+  checkboxContainer1.appendChild(cbLabel);
+
+  const wrapper = document.createElement("div");
+  wrapper.id = `wrapper1-${strike}`;
+  wrapper.style.marginBottom = "25px";
+
+  const title = document.createElement("h3");
+  title.innerText = `Strike ${strike}`;
+  title.style.textAlign = "center";
+  title.style.marginBottom = "8px";
+
+  const iframe = document.createElement("iframe");
+  iframe.id = `strike1-${strike}`;
+  iframe.src = `${baseURL1}${oid}`;
+  iframe.style.width = "100%";
+  iframe.style.height = "400px";
+  iframe.loading = "lazy";   // << ADDED
+
+  wrapper.appendChild(title);
+  wrapper.appendChild(iframe);
+  chartContainer1.appendChild(wrapper);
+});
+
+function toggleChart1(strike) {
+  const checkbox = document.getElementById(`cb1-strike${strike}`);
+  const wrapper = document.getElementById(`wrapper1-${strike}`);
+  wrapper.style.display = checkbox.checked ? "block" : "none";
+}
+
+function selectAllChart1(state) {
+  Object.keys(chart1).forEach(strike => {
+    const checkbox = document.getElementById(`cb1-strike${strike}`);
+    checkbox.checked = state;
+    toggleChart1(strike);
+  });
+}
+
+window.addEventListener("DOMContentLoaded", () => selectAllChart1(false));
+</script>
+
+  <!-- 
 
 // const baseURL1 = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQwdBNIekjQua_YjtFzp4hCVs7XUHN4UilhgNG_wZy2w-gfFZUds2hr7lyqqrctXDQxtk9wKp3gRz_-/pubchart?oid=857353960&format=interactive&oid=";
 
@@ -506,8 +558,7 @@ function selectAllChart1(state) {
 window.addEventListener("DOMContentLoaded", () => selectAllChart1(false));
 </script>
 
-
-  
+   -->
 
 
 
