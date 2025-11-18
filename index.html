@@ -456,7 +456,7 @@ const baseURL1 = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQwdBNIekjQua_
 const checkboxContainer1 = document.getElementById("checkboxes-chart1");
 const chartContainer1 = document.getElementById("chart-grid-chart1");
 
-Object.entries(charts1).forEach(([strike, oid]) => {
+Object.entries(chart1).forEach(([strike, oid]) => {
   // ✅ Checkbox with label
   const cbLabel = document.createElement("label");
   cbLabel.innerHTML = `
@@ -495,7 +495,7 @@ function toggleChart1(strike) {
 }
 
 function selectAllChart1(state) {
-  Object.keys(charts1).forEach(strike => {
+  Object.keys(chart1).forEach(strike => {
     const checkbox = document.getElementById(`cb1-strike${strike}`);
     checkbox.checked = state;
     toggleChart1(strike);
