@@ -368,10 +368,9 @@
 
 
 <!-- ✅ Chart 1 -->
-<!-- Chart 1 -->
 <div id="chart1" class="tabcontent">
   <h2>OI-CCOI-LVD Chart</h2>
- 
+
   <div class="legend">
     <span><span class="legend-box solid-blue"></span> Call OI</span>
     <span><span class="legend-box solid-red"></span> Put OI</span>
@@ -381,24 +380,32 @@
     <span><span class="legend-box light-red"></span> LTP - LVD(Put)</span>
   </div>
 
-  <div style="margin: 15px 0;">
+  <div style="margin:15px 0;">
     <button onclick="clearSelection()">Clear All</button>
-    <span style="margin-left:20px; color:#555;">
-      Selected: <span id="selected-count">0</span>/2 strikes
+    <span style="margin-left:20px; color:#555; font-weight:bold;">
+      Selected: <span id="selected-count">0</span>/<span id="max-count">3</span> strikes
     </span>
   </div>
 
-  <div id="checkboxes-chart1" class="checkboxes" style="display:flex; flex-wrap:wrap; gap:12px; margin-bottom:20px;"></div>
-  <div id="chart-grid-chart1" class="chart-grid" style="display:grid; grid-template-columns:1fr 1fr; gap:20px;"></div>
+  <div id="checkboxes-chart1" style="display:flex; flex-wrap:wrap; gap:12px; margin-bottom:20px;"></div>
+
+  <!-- Dynamic grid: automatically adjusts columns based on number selected -->
+  <div id="chart-grid-chart1" class="chart-grid" style="display:grid; gap:25px; margin-top:20px;"></div>
 </div>
 
 <script>
 document.addEventListener("DOMContentLoaded", () => {
+  // CHANGE THIS NUMBER TO SET YOUR MAXIMUM!
+  const MAX_STRIKES = 3;        // 2 = max 4 charts, 3 = max 6 charts, 4 = max 8 charts, etc.
+
+  document.getElementById("max-count").textContent = MAX_STRIKES;
+
   const charts1 = {
     25700: "385681292",
     25750: "1692038241",
     25800: "313543024",
     25850: "1763013981",
+    // add more strikes here if needed
   };
 
   const charts2 = {
@@ -414,11 +421,10 @@ document.addEventListener("DOMContentLoaded", () => {
   const chartContainer = document.getElementById("chart-grid-chart1");
   const selectedCountDisplay = document.getElementById("selected-count");
 
-  const selectedStrikes = new Set(); // Track up to 2 selected strikes
+  const selectedStrikes = new Set();
 
-  // Create strike buttons and chart wrappers
   Object.keys(charts1).forEach(strike => {
-    // Custom styled button (acts as toggle)
+    // Toggle button
     const label = document.createElement("label");
     label.className = "strike-btn";
     label.innerHTML = `
@@ -427,21 +433,22 @@ document.addEventListener("DOMContentLoaded", () => {
     `;
     checkboxContainer.appendChild(label);
 
-    // Chart wrapper (holds both charts for this strike)
+    // Wrapper for the two charts of this strike
     const wrapper = document.createElement("div");
     wrapper.id = `wrapper-${strike}`;
-    wrapper.className = "strike-charts-wrapper";
+    wrapper.className = "strike-wrapper";
     wrapper.style.display = "none";
     wrapper.style.border = "2px solid #ddd";
     wrapper.style.borderRadius = "12px";
-    wrapper.style.padding = "15px";
-    wrapper.style.background = "#fafafa";
+    wrapper.style.padding = "16px";
+    wrapper.style.background = "#fcfcfc";
+    wrapper.style.boxShadow = "0 4px 12px rgba(0,0,0,0.05)";
 
     const title = document.createElement("h3");
     title.textContent = `Strike ${strike}`;
     title.style.textAlign = "center";
-    title.style.margin = "0 0 15px 0";
-    title.style.color = "#333";
+    title.style.margin = "0 0 12px 0";
+    title.style.color = "#222";
     wrapper.appendChild(title);
 
     // Chart 1
@@ -461,13 +468,13 @@ document.addEventListener("DOMContentLoaded", () => {
       iframe2.style.height = "380px";
       iframe2.style.border = "none";
       iframe2.style.borderRadius = "8px";
-      iframe2.style.marginTop = "15px";
+      iframe2.style.marginTop = "14px";
       wrapper.appendChild(iframe2);
     }
 
     chartContainer.appendChild(wrapper);
 
-    // Click handler
+    // Click → toggle
     label.addEventListener("click", (e) => {
       e.preventDefault();
       toggleStrike(strike);
@@ -475,92 +482,80 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   function toggleStrike(strike) {
-    const checkbox = document.getElementById(`cb-${strike}`);
     const wrapper = document.getElementById(`wrapper-${strike}`);
+    const checkbox = document.getElementById(`cb-${strike}`);
 
     if (selectedStrikes.has(strike)) {
       // Deselect
       selectedStrikes.delete(strike);
-      checkbox.checked = false;
       wrapper.style.display = "none";
+      checkbox.checked = false;
     } else {
       // Try to select
-      if (selectedStrikes.size >= 2) {
-        alert("Maximum 2 strikes can be compared at a time.");
+      if (selectedStrikes.size >= MAX_STRIKES) {
+        alert(`Maximum ${MAX_STRIKES} strikes can be selected at a time.`);
         return;
       }
       selectedStrikes.add(strike);
-      checkbox.checked = true;
       wrapper.style.display = "block";
+      checkbox.checked = true;
     }
 
-    updateUI();
+    updateLayout();
   }
 
-  function updateUI() {
+  function updateLayout() {
     selectedCountDisplay.textContent = selectedStrikes.size;
+
+    // Auto grid columns: 1, 2 or 3 depending on selection
+    const count = selectedStrikes.size;
+    if (count === 0) {
+      chartContainer.style.gridTemplateColumns = "1fr";
+    } else if (count <= 2) {
+      chartContainer.style.gridTemplateColumns = "repeat(2, 1fr)";
+    } else {
+      chartContainer.style.gridTemplateColumns = "repeat(3, 1fr)";
+    }
+
+    // Mobile fallback
+    if (window.innerWidth <= 900) {
+      chartContainer.style.gridTemplateColumns = "1fr";
+    }
 
     // Update button styles
     document.querySelectorAll(".strike-btn").forEach(btn => {
-      const input = btn.querySelector("input");
-      if (input.checked) {
-        btn.classList.add("selected");
-      } else {
-        btn.classList.remove("selected");
-      }
+      btn.classList.toggle("selected", btn.querySelector("input").checked);
     });
-
-    // Adjust grid: 1 or 2 columns
-    if (selectedStrikes.size <= 1) {
-      chartContainer.style.gridTemplateColumns = "1fr";
-    } else {
-      chartContainer.style.gridTemplateColumns = "1fr 1fr";
-    }
   }
 
   window.clearSelection = function() {
     selectedStrikes.clear();
-    document.querySelectorAll('input[type="checkbox"]').forEach(cb => {
-      cb.checked = false;
-      const strike = cb.id.split("-")[1];
-      document.getElementById(`wrapper-${strike}`).style.display = "none";
-    });
-    updateUI();
+    document.querySelectorAll(".strike-wrapper").forEach(w => w.style.display = "none");
+    document.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.checked = false);
+    updateLayout();
   };
 
-  // Beautiful button styles
+  // Styling
   const style = document.createElement("style");
   style.textContent = `
-    .strike-btn {
-      cursor: pointer;
-      user-select: none;
-    }
+    .strike-btn { cursor:pointer; user-select:none; }
     .strike-btn .btn-text {
-      display: inline-block;
-      padding: 10px 18px;
-      background: #f0f0f0;
-      border: 2px solid #ccc;
-      border-radius: 10px;
-      font-weight: bold;
-      transition: all 0.2s;
+      display:inline-block; padding:10px 20px; background:#f5f5f5;
+      border:2px solid #bbb; border-radius:12px; font-weight:bold;
+      transition:all 0.25s;
     }
-    .strike-btn:hover .btn-text {
-      background: #e0e0ff;
-      border-color: #0066ff;
-    }
-    .strike-btn.selected .btn-text,
-    .strike-btn input:checked + .btn-text {
-      background: #0066ff !important;
-      color: white !important;
-      border-color: #0066ff;
+    .strike-btn:hover .btn-text { background:#e6e6ff; border-color:#4488ff; }
+    .strike-btn.selected .btn-text, .strike-btn input:checked + .btn-text {
+      background:#0055ff !important; color:white !important; border-color:#0055ff;
     }
     @media (max-width: 900px) {
-      #chart-grid-chart1 {
-        grid-template-columns: 1fr !important;
-      }
+      #chart-grid-chart1 { grid-template-columns:1fr !important; }
     }
   `;
   document.head.appendChild(style);
+
+  // Initial layout
+  updateLayout();
 });
 </script>
 
