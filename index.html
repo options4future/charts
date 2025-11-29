@@ -380,32 +380,29 @@
     <span><span class="legend-box light-red"></span> LTP - LVD(Put)</span>
   </div>
 
-  <div style="margin:15px 0;">
+  <div style="margin:15px 0; font-size:16px;">
     <button onclick="clearSelection()">Clear All</button>
-    <span style="margin-left:20px; color:#555; font-weight:bold;">
-      Selected: <span id="selected-count">0</span>/<span id="max-count">3</span> strikes
+    <span style="margin-left:25px; color:#222;">
+      Selected: <strong><span id="selected-count">0</span></strong> strikes
     </span>
   </div>
 
-  <div id="checkboxes-chart1" style="display:flex; flex-wrap:wrap; gap:12px; margin-bottom:20px;"></div>
+  <div id="checkboxes-chart1" style="display:flex; flex-wrap:wrap; gap:14px; margin-bottom:25px;"></div>
 
-  <!-- Dynamic grid: automatically adjusts columns based on number selected -->
-  <div id="chart-grid-chart1" class="chart-grid" style="display:grid; gap:25px; margin-top:20px;"></div>
+  <!-- ONE STRIKE BLOCK PER ROW → always 2 charts in a row -->
+  <div id="chart-grid-chart1" style="display:flex; flex-direction:column; gap:40px; margin-top:20px;"></div>
 </div>
 
 <script>
 document.addEventListener("DOMContentLoaded", () => {
-  // CHANGE THIS NUMBER TO SET YOUR MAXIMUM!
-  const MAX_STRIKES = 20;        // 2 = max 4 charts, 3 = max 6 charts, 4 = max 8 charts, etc.
-
-  document.getElementById("max-count").textContent = MAX_STRIKES;
+  const MAX_STRIKES = 20;  // You can select up to 20
 
   const charts1 = {
     25700: "385681292",
     25750: "1692038241",
     25800: "313543024",
     25850: "1763013981",
-    // add more strikes here if needed
+    // Add more strikes here anytime
   };
 
   const charts2 = {
@@ -433,129 +430,125 @@ document.addEventListener("DOMContentLoaded", () => {
     `;
     checkboxContainer.appendChild(label);
 
-    // Wrapper for the two charts of this strike
-    const wrapper = document.createElement("div");
-    wrapper.id = `wrapper-${strike}`;
-    wrapper.className = "strike-wrapper";
-    wrapper.style.display = "none";
-    wrapper.style.border = "2px solid #ddd";
-    wrapper.style.borderRadius = "12px";
-    wrapper.style.padding = "16px";
-    wrapper.style.background = "#fcfcfc";
-    wrapper.style.boxShadow = "0 4px 12px rgba(0,0,0,0.05)";
+    // Full-width row for this strike (contains 2 charts)
+    const row = document.createElement("div");
+    row.className = "strike-row";
+    row.style.display = "none";
+    row.style.border = "3px solid #3366ff";
+    row.style.borderRadius = "18px";
+    row.style.padding = "20px";
+    row.style.background = "linear-gradient(135deg, #f9fbff, #f0f5ff)";
+    row.style.boxShadow = "0 8px 25px rgba(0,50,150,0.1)";
 
     const title = document.createElement("h3");
     title.textContent = `Strike ${strike}`;
     title.style.textAlign = "center";
-    title.style.margin = "0 0 12px 0";
-    title.style.color = "#222";
-    wrapper.appendChild(title);
+    title.style.margin = "0 0 20px 0";
+    title.style.color = "#003399";
+    title.style.fontSize = "22px";
+    title.style.fontWeight = "bold";
+    row.appendChild(title);
+
+    // Two charts side-by-side
+    const chartsRow = document.createElement("div");
+    chartsRow.style.display = "grid";
+    chartsRow.style.gridTemplateColumns = "1fr 1fr";
+    chartsRow.style.gap = "20px";
 
     // Chart 1
     const iframe1 = document.createElement("iframe");
     iframe1.src = baseURL + charts1[strike];
     iframe1.style.width = "100%";
-    iframe1.style.height = "380px";
+    iframe1.style.height = "420px";
     iframe1.style.border = "none";
-    iframe1.style.borderRadius = "8px";
-    wrapper.appendChild(iframe1);
+    iframe1.style.borderRadius = "14px";
+    iframe1.style.boxShadow = "0 4px 15px rgba(0,0,0,0.12)";
+    chartsRow.appendChild(iframe1);
 
     // Chart 2
     if (charts2[strike]) {
       const iframe2 = document.createElement("iframe");
       iframe2.src = baseURL + charts2[strike];
       iframe2.style.width = "100%";
-      iframe2.style.height = "380px";
+      iframe2.style.height = "420px";
       iframe2.style.border = "none";
-      iframe2.style.borderRadius = "8px";
-      iframe2.style.marginTop = "14px";
-      wrapper.appendChild(iframe2);
+      iframe2.style.borderRadius = "14px";
+      iframe2.style.boxShadow = "0 4px 15px rgba(0,0,0,0.12)";
+      chartsRow.appendChild(iframe2);
     }
 
-    chartContainer.appendChild(wrapper);
+    row.appendChild(chartsRow);
+    chartContainer.appendChild(row);
 
-    // Click → toggle
+    // Click to toggle
     label.addEventListener("click", (e) => {
       e.preventDefault();
-      toggleStrike(strike);
+      toggleStrike(strike, row);
     });
   });
 
-  function toggleStrike(strike) {
-    const wrapper = document.getElementById(`wrapper-${strike}`);
-    const checkbox = document.getElementById(`cb-${strike}`);
-
+  function toggleStrike(strike, rowElement) {
     if (selectedStrikes.has(strike)) {
-      // Deselect
       selectedStrikes.delete(strike);
-      wrapper.style.display = "none";
-      checkbox.checked = false;
+      rowElement.style.display = "none";
+      document.getElementById(`cb-${strike}`).checked = false;
     } else {
-      // Try to select
       if (selectedStrikes.size >= MAX_STRIKES) {
-        alert(`Maximum ${MAX_STRIKES} strikes can be selected at a time.`);
+        alert(`Maximum ${MAX_STRIKES} strikes allowed.`);
         return;
       }
       selectedStrikes.add(strike);
-      wrapper.style.display = "block";
-      checkbox.checked = true;
+      rowElement.style.display = "block";
+      document.getElementById(`cb-${strike}`).checked = true;
     }
-
-    updateLayout();
+    updateUI();
   }
 
-  function updateLayout() {
+  function updateUI() {
     selectedCountDisplay.textContent = selectedStrikes.size;
 
-    // Auto grid columns: 1, 2 or 3 depending on selection
-    const count = selectedStrikes.size;
-    if (count === 0) {
-      chartContainer.style.gridTemplateColumns = "1fr";
-    } else if (count <= 2) {
-      chartContainer.style.gridTemplateColumns = "repeat(2, 1fr)";
-    } else {
-      chartContainer.style.gridTemplateColumns = "repeat(3, 1fr)";
-    }
-
-    // Mobile fallback
-    if (window.innerWidth <= 900) {
-      chartContainer.style.gridTemplateColumns = "1fr";
-    }
-
-    // Update button styles
+    // Update button appearance
     document.querySelectorAll(".strike-btn").forEach(btn => {
-      btn.classList.toggle("selected", btn.querySelector("input").checked);
+      const checked = btn.querySelector("input").checked;
+      btn.classList.toggle("selected", checked);
     });
   }
 
   window.clearSelection = function() {
     selectedStrikes.clear();
-    document.querySelectorAll(".strike-wrapper").forEach(w => w.style.display = "none");
+    document.querySelectorAll(".strike-row").forEach(row => row.style.display = "none");
     document.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.checked = false);
-    updateLayout();
+    updateUI();
   };
 
-  // Styling
+  // Clean & Professional Styling
   const style = document.createElement("style");
   style.textContent = `
     .strike-btn { cursor:pointer; user-select:none; }
     .strike-btn .btn-text {
-      display:inline-block; padding:10px 20px; background:#f5f5f5;
-      border:2px solid #bbb; border-radius:12px; font-weight:bold;
+      padding:12px 24px;
+      background:#eef4ff;
+      border:2px solid #4488ff;
+      border-radius:14px;
+      font-weight:bold;
+      font-size:16px;
+      color:#003366;
       transition:all 0.25s;
     }
-    .strike-btn:hover .btn-text { background:#e6e6ff; border-color:#4488ff; }
-    .strike-btn.selected .btn-text, .strike-btn input:checked + .btn-text {
-      background:#0055ff !important; color:white !important; border-color:#0055ff;
+    .strike-btn:hover .btn-text { background:#dde8ff; transform:scale(1.06); }
+    .strike-btn.selected .btn-text {
+      background:#0044cc !important;
+      color:white !important;
+      box-shadow:0 5px 15px rgba(0,70,200,0.4);
     }
-    @media (max-width: 900px) {
-      #chart-grid-chart1 { grid-template-columns:1fr !important; }
+
+    @media (max-width: 1000px) {
+      .strike-row > div { grid-template-columns:1fr !important; }
     }
   `;
   document.head.appendChild(style);
 
-  // Initial layout
-  updateLayout();
+  updateUI();
 });
 </script>
 
