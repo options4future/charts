@@ -370,8 +370,8 @@
 <!-- ✅ Chart 1 -->
 <!-- ✅ Chart 1 -->
 <div id="chart1" class="tabcontent">
-  <h2>OI-CCOI-LVDChart</h2>
-  
+  <h2>OI-CCOI-LVD Chart</h2>
+ 
   <div class="legend">
     <span><span class="legend-box solid-blue"></span> Call OI</span>
     <span><span class="legend-box solid-red"></span> Put OI</span>
@@ -382,127 +382,134 @@
   </div>
 
   <div style="margin: 10px 0;">
-    <button onclick="selectAllChart1(true)">✅ Select All</button>
-    <button onclick="selectAllChart1(false)">❌ Deselect All</button>
+    <button onclick="selectStrike(null)">🔲 Clear Selection</button>
   </div>
 
-  <div id="checkboxes-chart1" class="checkboxes" style="margin-bottom:15px; display:flex; flex-wrap: wrap; gap:10px;"></div>
+  <div id="checkboxes-chart1" class="checkboxes" style="margin-bottom:15px; display:flex; flex-wrap: wrap; gap:12px;"></div>
   <div id="chart-grid-chart1" class="chart-grid"></div>
 </div>
 
-<script> 
+<script>
+document.addEventListener("DOMContentLoaded", () => {
   const charts1 = {
-  // 25150: "803193799",
- // 25200: "1774106736",
-  // 25250: "706793629",
-  // 25300: "2094820521",
-  // 25350: "1104113578",
-  // 25400: "1744028156",
-  // 25450: "1418383130",
-  25500: "1770092151",
-  25550: "199112051",
-  25600: "952474926",
-  25650: "2025273832",
-  25700: "385681292",  
-  25750: "1692038241",
-  25800: "313543024",
-  25850: "1763013981",
-  25900: "831657942",
-  25950: "2063948723",
-  26000: "548923849",
-  26050: "575746495",
-  26100: "521346185",
-  26150: "1387283168",
-  26200: "2025182217",
-  26250: "236540291",
-  26300: "319939010",
-  26350: "2064959247",
-  26400: "1169910435",
-  26450: "1540248194",
-  26500: "1130691669",
-  // 26550: "1302705504",
-  // 26600: "983537328",
-  // 26650: "1180687704",
-  // 26700: "857353960",
-  // 26750: "1083404014",
-  // 26800: "1202010075",
-  // 26850: "894341899",
-  // 26900: "472808175",
-  // 26950: "1233756397",
-  // 27000: "1541263372",
-  // 27050: "1973965389",
-  // 27100: "606099251",
-  // 27150: "1224804094",
-  // 27200: "11506296",
-  // 27250: "101266446",
-  // 27300: "1712698988",
-  // 27350: "669780284",
-  // 27400: "795026390",
-  // 27450: "957993621",
-  // 27500: "82721718",
-  // 27550: "1803813806",
-  // 27600: "1424817088",
-};
+    25700: "385681292",
+    25750: "1692038241",
+    25800: "313543024",
+    25850: "1763013981",
+  };
 
+  const charts2 = {
+    25700: "1816191743",
+    25750: "1998347533",
+    25800: "1473360174",
+    25850: "1397258143",
+  };
 
-// const baseURL1 = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQwdBNIekjQua_YjtFzp4hCVs7XUHN4UilhgNG_wZy2w-gfFZUds2hr7lyqqrctXDQxtk9wKp3gRz_-/pubchart?oid=857353960&format=interactive&oid=";
+  const baseURL1 = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQwdBNIekjQua_YjtFzp4hCVs7XUHN4UilhgNG_wZy2w-gfFZUds2hr7lyqqrctXDQxtk9wKp3gRz_-/pubchart?format=interactive&oid=";
 
-const baseURL1 = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQwdBNIekjQua_YjtFzp4hCVs7XUHN4UilhgNG_wZy2w-gfFZUds2hr7lyqqrctXDQxtk9wKp3gRz_-/pubchart?format=interactive&oid=";
-                 
-  
-const checkboxContainer1 = document.getElementById("checkboxes-chart1");
-const chartContainer1 = document.getElementById("chart-grid-chart1");
+  const checkboxContainer1 = document.getElementById("checkboxes-chart1");
+  const chartContainer1 = document.getElementById("chart-grid-chart1");
 
-Object.entries(charts1).forEach(([strike, oid]) => {
-  // ✅ Checkbox with label
-  const cbLabel = document.createElement("label");
-  cbLabel.innerHTML = `
-    <input type="checkbox" id="cb1-strike${strike}" onchange="toggleChart1('${strike}')" checked>
-    ${strike}
-  `;
-  checkboxContainer1.appendChild(cbLabel);
+  let currentSelectedStrike = null;  // Track currently selected strike
 
-  // ✅ Wrapper div
-  const wrapper = document.createElement("div");
-  wrapper.id = `wrapper1-${strike}`;
-  wrapper.style.marginBottom = "25px";
+  Object.entries(charts1).forEach(([strike, oid]) => {
+    // Create clickable label (acts like radio button)
+    const label = document.createElement("label");
+    label.className = "strike-label";
+    label.innerHTML = `
+      <input type="radio" name="strikeGroup" id="cb1-strike${strike}" value="${strike}" style="display:none;">
+      <span class="custom-radio">${strike}</span>
+    `;
+    checkboxContainer1.appendChild(label);
 
-  // ✅ Title
-  const title = document.createElement("h3");
-  title.innerText = `Strike ${strike}`;
-  title.style.textAlign = "center";
-  title.style.marginBottom = "8px";
+    // Create wrapper for charts
+    const wrapper = document.createElement("div");
+    wrapper.id = `wrapper1-${strike}`;
+    wrapper.style.display = "none";  // Hidden by default
+    wrapper.style.marginBottom = "30px";
 
-  // ✅ Chart iframe
-  const iframe = document.createElement("iframe");
-  iframe.id = `strike1-${strike}`;
-  iframe.src = `${baseURL1}${oid}`;
-  iframe.style.width = "100%";
-  iframe.style.height = "400px";
+    const title = document.createElement("h3");
+    title.innerText = `Strike ${strike}`;
+    title.style.textAlign = "center";
+    title.style.margin = "10px 0";
+    wrapper.appendChild(title);
 
-  wrapper.appendChild(title);
-  wrapper.appendChild(iframe);
-  chartContainer1.appendChild(wrapper);
-});
+    // Chart 1
+    const iframe1 = document.createElement("iframe");
+    iframe1.src = `${baseURL1}${oid}`;
+    iframe1.style.width = "100%";
+    iframe1.style.height = "420px";
+    iframe1.style.border = "1px solid #ddd";
+    iframe1.style.borderRadius = "8px";
+    wrapper.appendChild(iframe1);
 
-function toggleChart1(strike) {
-  const checkbox = document.getElementById(`cb1-strike${strike}`);
-  const wrapper = document.getElementById(`wrapper1-${strike}`);
-  wrapper.style.display = checkbox.checked ? "block" : "none";
-}
+    // Chart 2 (if exists)
+    if (charts2[strike]) {
+      const iframe2 = document.createElement("iframe");
+      iframe2.src = `${baseURL1}${charts2[strike]}`;
+      iframe2.style.width = "100%";
+      iframe2.style.height = "420px";
+      iframe2.style.border = "1px solid #ddd";
+      iframe2.style.borderRadius = "8px";
+      iframe2.style.marginTop = "15px";
+      wrapper.appendChild(iframe2);
+    }
 
-function selectAllChart1(state) {
-  Object.keys(charts1).forEach(strike => {
-    const checkbox = document.getElementById(`cb1-strike${strike}`);
-    checkbox.checked = state;
-    toggleChart1(strike);
+    chartContainer1.appendChild(wrapper);
+
+    // Click handler
+    label.addEventListener("click", () => {
+      selectStrike(strike);
+    });
   });
-}
 
-// ✅ Deselect all on load
-window.addEventListener("DOMContentLoaded", () => selectAllChart1(false));
+  // Function to show only one strike's charts
+  window.selectStrike = function(strike) {
+    // Hide all wrappers
+    Object.keys(charts1).forEach(s => {
+      document.getElementById(`wrapper1-${s}`).style.display = "none";
+      const radio = document.getElementById(`cb1-strike${s}`);
+      if (radio) radio.checked = false;
+    });
+
+    if (strike === null) {
+      currentSelectedStrike = null;
+      return;
+    }
+
+    // Show selected
+    document.getElementById(`wrapper1-${strike}`).style.display = "block";
+    document.getElementById(`cb1-strike${strike}`).checked = true;
+    currentSelectedStrike = strike;
+
+    // Optional: smooth scroll to charts
+    document.getElementById("chart-grid-chart1").scrollIntoView({ behavior: "smooth", block: "start" });
+  };
+
+  // Optional: nice styling for custom radio buttons
+  const style = document.createElement("style");
+  style.textContent = `
+    .strike-label { cursor: pointer; }
+    .custom-radio {
+      display: inline-block;
+      padding: 8px 16px;
+      border: 2px solid #ccc;
+      border-radius: 8px;
+      background: #f9f9f9;
+      transition: all 0.2s;
+    }
+    .custom-radio:hover { background: #eef; border-color: #66f; }
+    input[name="strikeGroup"]:checked + .custom-radio,
+    .custom-radio:active {
+      background: #0066ff !important;
+      color: white !important;
+      border-color: #0066ff;
+      font-weight: bold;
+    }
+  `;
+  document.head.appendChild(style);
+});
 </script>
-
 
   
   <!-- 
