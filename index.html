@@ -391,7 +391,6 @@
 </div>
 
 <script> 
-  document.addEventListener("DOMContentLoaded", () => {
   const charts1 = {
   // 25150: "803193799",
  // 25200: "1774106736",
@@ -445,13 +444,6 @@
   // 27600: "1424817088",
 };
 
-  const charts2 = { 
-  25700: "1816191743", 
-  25750: "1998347533", 
-  25800: "1473360174", 
-  25850: "1397258143",
-};
-
 
 // const baseURL1 = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQwdBNIekjQua_YjtFzp4hCVs7XUHN4UilhgNG_wZy2w-gfFZUds2hr7lyqqrctXDQxtk9wKp3gRz_-/pubchart?oid=857353960&format=interactive&oid=";
 
@@ -475,45 +467,29 @@ Object.entries(charts1).forEach(([strike, oid]) => {
   wrapper.id = `wrapper1-${strike}`;
   wrapper.style.marginBottom = "25px";
 
- // Title
-const title = document.createElement("h3");
-title.innerText = `Strike ${strike}`;
-title.style.textAlign = "center";
-title.style.marginBottom = "8px";
-wrapper.appendChild(title);
+  // ✅ Title
+  const title = document.createElement("h3");
+  title.innerText = `Strike ${strike}`;
+  title.style.textAlign = "center";
+  title.style.marginBottom = "8px";
 
-// Chart 1 iframe
-const iframe1 = document.createElement("iframe");
-iframe1.id = `strike1-${strike}`;
-iframe1.src = `${baseURL1}${oid}`;
-iframe1.style.width = "100%";
-iframe1.style.height = "400px";
-wrapper.appendChild(iframe1);
+  // ✅ Chart iframe
+  const iframe = document.createElement("iframe");
+  iframe.id = `strike1-${strike}`;
+  iframe.src = `${baseURL1}${oid}`;
+  iframe.style.width = "100%";
+  iframe.style.height = "400px";
 
-// Chart 2 iframe (if available)
-if (charts2[strike]) {
-  const iframe2 = document.createElement("iframe");
-  iframe2.id = `strike2-${strike}`;
-  iframe2.src = `${baseURL1}${charts2[strike]}`;
-  iframe2.style.width = "100%";
-  iframe2.style.height = "400px";
-  iframe2.style.marginTop = "10px";
-  wrapper.appendChild(iframe2);
-}
-
-chartContainer1.appendChild(wrapper);
-
-  
+  wrapper.appendChild(title);
+  wrapper.appendChild(iframe);
+  chartContainer1.appendChild(wrapper);
 });
 
 function toggleChart1(strike) {
-  const checked = document.getElementById(`cb1-strike${strike}`).checked;
-
-  // wrapper controls both charts
+  const checkbox = document.getElementById(`cb1-strike${strike}`);
   const wrapper = document.getElementById(`wrapper1-${strike}`);
-  wrapper.style.display = checked ? "block" : "none";
+  wrapper.style.display = checkbox.checked ? "block" : "none";
 }
-
 
 function selectAllChart1(state) {
   Object.keys(charts1).forEach(strike => {
@@ -524,9 +500,9 @@ function selectAllChart1(state) {
 }
 
 // ✅ Deselect all on load
-selectAllChart1(false);
-}); 
+window.addEventListener("DOMContentLoaded", () => selectAllChart1(false));
 </script>
+
 
   
   <!-- 
@@ -1200,21 +1176,3 @@ let currentTab = 0;
 </script>
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
