@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Trend Google Charts</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f9f9f9;
+      margin: 20px;
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    /* Tab styles */
+    .tab {
+      overflow: hidden;
+      border-bottom: 2px solid #ccc;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+    .tab button {
+      background-color: inherit;
+      border: none;
+      outline: none;
+      cursor: pointer;
+      padding: 10px 20px;
+      transition: 0.3s;
+      font-size: 16px;
+      margin: 0 5px;
+      border-radius: 6px 6px 0 0;
+    }
+    .tab button:hover {
+      background-color: #ddd;
+    }
+    .tab button.active {
+      background-color: #4285f4;
+      color: white;
+    }
+    /* Tab content */
+    .tabcontent {
+      display: none;
+      padding: 20px;
+      text-align: center;
+      background: white;
+      border-radius: 0 0 10px 10px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    }
+    iframe {
+      width: 100%;
+      max-width: 550px;
+      height: 450px;
+      border: none;
+      border-radius: 10px;
+    }
+    /* Sticky consolidated charts */
+    .sticky-charts {
+      display: flex;
+      gap: 10px;
+      background: white;
+      padding: 10px;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+    }
+    .sticky-charts iframe {
+      width: 550px;
+      height: 450px;
+      border: none;
+    }
+    /* Legend styles */
+    .legend {
+      margin: 10px 0 20px 0;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 15px;
+      font-size: 14px;
+    }
+    .legend-box {
+      display: inline-block;
+      width: 25px;
+      height: 3px;
+      margin-right: 6px;
+      vertical-align: middle;
+    }
+    .solid-blue { background: blue; }
+    .solid-red { background: red; }
+    .light-green { background: lightgreen; }
+    .light-red { background: pink; }
+    .dotted-blue {
+      background: repeating-linear-gradient(to right, blue 0, blue 3px, transparent 3px, transparent 6px);
+    }
+    .dotted-red {
+      background: repeating-linear-gradient(to right, red 0, red 3px, transparent 3px, transparent 6px);
+    }
+    /* Full-width single chart */
+    .oi-amount-frame {
+      width: 100%;
+      max-width: 1600px;
+      height: 900px;
+      border: none;
+      margin: 0 auto;
+      display: block;
+    }
+/* Full-width single chart */
+    .oi-amount-frame1 {
+      width: 100%;
+      max-width: 1600px;
+      height: 600px;
+      border: none;
+      margin: 0 auto;
+      display: block;
+    }
+   
+   .chart-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(500px, 1fr)); /* auto adjusts */
+  gap: 20px;
+}
+    /* ✅ Grid for 2 graphs per row */
+.iframe-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr); /* 2 per row */
+  gap: 20px; /* spacing between graphs */
+  justify-items: center;
+}
+
+.chart-grid iframe {
+  width: 100%;       /* fill grid cell */
+  height: 500px;     /* adjust height so no vertical scrollbar */
+  border: none;
+  overflow: hidden;  /* removes internal scroll */
+}
+   
+  </style>
+</head>
+<body>
+
+<h1>Trend Charts</h1>
+
+<!-- ✅ Sticky consolidated charts -->
+<div class="sticky-charts">
+  <iframe src="https://docs.google.com/spreadsheets/d/e/2PACX-1vQ5Lvrxvflj_qRKt-eVIUlr3yltRJQgISwea-qRRDoI5tXMT3TFXiwy0pukbs6wjOfS1K_C9zNxtUra/pubchart?oid=656959693&format=interactive"></iframe>
+  <iframe src="https://docs.google.com/spreadsheets/d/e/2PACX-1vQ5Lvrxvflj_qRKt-eVIUlr3yltRJQgISwea-qRRDoI5tXMT3TFXiwy0pukbs6wjOfS1K_C9zNxtUra/pubchart?oid=562066817&format=interactive"></iframe>
+  <iframe src="https://docs.google.com/spreadsheets/d/e/2PACX-1vQ5Lvrxvflj_qRKt-eVIUlr3yltRJQgISwea-qRRDoI5tXMT3TFXiwy0pukbs6wjOfS1K_C9zNxtUra/pubchart?oid=111169045&format=interactive"></iframe>
+   <iframe src="https://docs.google.com/spreadsheets/d/e/2PACX-1vQ5Lvrxvflj_qRKt-eVIUlr3yltRJQgISwea-qRRDoI5tXMT3TFXiwy0pukbs6wjOfS1K_C9zNxtUra/pubchart?oid=2120533255&format=interactive"></iframe>
+ 
+   <iframe src="https://docs.google.com/spreadsheets/d/e/2PACX-1vQ5Lvrxvflj_qRKt-eVIUlr3yltRJQgISwea-qRRDoI5tXMT3TFXiwy0pukbs6wjOfS1K_C9zNxtUra/pubchart?oid=372143739&format=interactive"></iframe>
+   <iframe src="https://docs.google.com/spreadsheets/d/e/2PACX-1vQ5Lvrxvflj_qRKt-eVIUlr3yltRJQgISwea-qRRDoI5tXMT3TFXiwy0pukbs6wjOfS1K_C9zNxtUra/pubchart?oid=929446995&format=interactive"></iframe>
+ 
+</div>
+
+<!-- ✅ Tabs -->
+<div class="tab">
+  <button class="tablinks" onclick="openChart(event, 'chart1')" id="defaultOpen">OI-CCOI-VWAP Diff Chart</button>
+  <button class="tablinks" onclick="openChart(event, 'chart2')">LTP VWAP diff-Amount</button>
+  <button class="tablinks" onclick="openChart(event, 'chart3')">Chng OI-VWAP diff</button>
+  <button class="tablinks" onclick="openChart(event, 'chart4')">OI-Amount</button>
+  <button class="tablinks" onclick="openChart(event, 'chart5')">LTP_OI</button>
+  <button class="tablinks" onclick="openChart(event, 'chart6')">Data</button>
+   <button class="tablinks" onclick="openChart(event, 'chart7')">Stocks</button>
+  <button class="tablinks" onclick="openChart(event, 'chart8')">Raw Data</button>
+  <button class="tablinks" onclick="openChart(event, 'chart9')">OI-CCOI-VWAP Diff Chart1</button>
+  </div>
+
+<!-- ✅ Chart 1 -->
+<div id="chart1" class="tabcontent">
+  <h2>OI-CCOI-VWAP Diff Chart</h2>
+  <div class="legend">
+    <span><span class="legend-box solid-blue"></span> Call OI</span>
+    <span><span class="legend-box solid-red"></span> Put OI</span>
+    <span><span class="legend-box dotted-blue"></span> Change OI - Call</span>
+    <span><span class="legend-box dotted-red"></span> Change OI - Put</span>
+    <span><span class="legend-box light-green"></span> LTP - VWAP Diff (Call)</span>
+    <span><span class="legend-box light-red"></span> LTP - VWAP Diff (Put)</span>
+  </div>
+  <div class="chart-grid">
+
+   
+   
+    <iframe src="https://docs.google.com/spreadsheets/d/e/2PACX-1vTdKlNUiAKVlVSxDzsCRMxxCYhpmk7VhLZXN26GBsXnvlc7Oylqg6cIFBzsCIi_yg9Dw0apQjn4q68d/pubchart?oid=46877149&format=interactive"></iframe>
+<iframe src="https://docs.google.com/spreadsheets/d/e/2PACX-1vTdKlNUiAKVlVSxDzsCRMxxCYhpmk7VhLZXN26GBsXnvlc7Oylqg6cIFBzsCIi_yg9Dw0apQjn4q68d/pubchart?oid=1257482955&format=interactive"></iframe>
+<iframe src="https://docs.google.com/spreadsheets/d/e/2PACX-1vTdKlNUiAKVlVSxDzsCRMxxCYhpmk7VhLZXN26GBsXnvlc7Oylqg6cIFBzsCIi_yg9Dw0apQjn4q68d/pubchart?oid=848482515&format=interactive"></iframe>
+<iframe src="https://docs.google.com/spreadsheets/d/e/2PACX-1vTdKlNUiAKVlVSxDzsCRMxxCYhpmk7VhLZXN26GBsXnvlc7Oylqg6cIFBzsCIi_yg9Dw0apQjn4q68d/pubchart?oid=1479021673&format=interactive"></iframe>
+
+<iframe src="https://docs.google.com/spreadsheets/d/e/2PACX-1vTdKlNUiAKVlVSxDzsCRMxxCYhpmk7VhLZXN26GBsXnvlc7Oylqg6cIFBzsCIi_yg9Dw0apQjn4q68d/pubchart?oid=1739502972&format=interactive"></iframe>
+<iframe src="https://docs.google.com/spreadsheets/d/e/2PACX-1vTdKlNUiAKVlVSxDzsCRMxxCYhpmk7VhLZXN26GBsXnvlc7Oylqg6cIFBzsCIi_yg9Dw0apQjn4q68d/pubchart?oid=367755220&format=interactive"></iframe>
+<iframe src="https://docs.google.com/spreadsheets/d/e/2PACX-1vTdKlNUiAKVlVSxDzsCRMxxCYhpmk7VhLZXN26GBsXnvlc7Oylqg6cIFBzsCIi_yg9Dw0apQjn4q68d/pubchart?oid=1500849932&format=interactive"></iframe>
+<iframe src="https://docs.google.com/spreadsheets/d/e/2PACX-1vTdKlNUiAKVlVSxDzsCRMxxCYhpmk7VhLZXN26GBsXnvlc7Oylqg6cIFBzsCIi_yg9Dw0apQjn4q68d/pubchart?oid=274291880&format=interactive"></iframe>
+<iframe src="https://docs.google.com/spreadsheets/d/e/2PACX-1vTdKlNUiAKVlVSxDzsCRMxxCYhpmk7VhLZXN26GBsXnvlc7Oylqg6cIFBzsCIi_yg9Dw0apQjn4q68d/pubchart?oid=1323068844&format=interactive"></iframe>
+
+
+<iframe src="https://docs.google.com/spreadsheets/d/e/2PACX-1vTdKlNUiAKVlVSxDzsCRMxxCYhpmk7VhLZXN26GBsXnvlc7Oylqg6cIFBzsCIi_yg9Dw0apQjn4q68d/pubchart?oid=296031812&format=interactive"></iframe>
+<iframe src="https://docs.google.com/spreadsheets/d/e/2PACX-1vTdKlNUiAKVlVSxDzsCRMxxCYhpmk7VhLZXN26GBsXnvlc7Oylqg6cIFBzsCIi_yg9Dw0apQjn4q68d/pubchart?oid=1554144487&format=interactive"></iframe>
+<iframe src="https://docs.google.com/spreadsheets/d/e/2PACX-1vTdKlNUiAKVlVSxDzsCRMxxCYhpmk7VhLZXN26GBsXnvlc7Oylqg6cIFBzsCIi_yg9Dw0apQjn4q68d/pubchart?oid=1464615402&format=interactive"></iframe>
+<iframe src="https://docs.google.com/spreadsheets/d/e/2PACX-1vTdKlNUiAKVlVSxDzsCRMxxCYhpmk7VhLZXN26GBsXnvlc7Oylqg6cIFBzsCIi_yg9Dw0apQjn4q68d/pubchart?oid=1900273215&format=interactive"></iframe>
+<iframe src="https://docs.google.com/spreadsheets/d/e/2PACX-1vTdKlNUiAKVlVSxDzsCRMxxCYhpmk7VhLZXN26GBsXnvlc7Oylqg6cIFBzsCIi_yg9Dw0apQjn4q68d/pubchart?oid=1367461944&format=interactive"></iframe>
+<iframe src="https://docs.google.com/spreadsheets/d/e/2PACX-1vTdKlNUiAKVlVSxDzsCRMxxCYhpmk7VhLZXN26GBsXnvlc7Oylqg6cIFBzsCIi_yg9Dw0apQjn4q68d/pubchart?oid=701954230&format=interactive"></iframe>
+
+    <iframe src="https://docs.google.com/spreadsheets/d/e/2PACX-1vTdKlNUiAKVlVSxDzsCRMxxCYhpmk7VhLZXN26GBsXnvlc7Oylqg6cIFBzsCIi_yg9Dw0apQjn4q68d/pubchart?oid=801936407&format=interactive"></iframe>
+<iframe src="https://docs.google.com/spreadsheets/d/e/2PACX-1vTdKlNUiAKVlVSxDzsCRMxxCYhpmk7VhLZXN26GBsXnvlc7Oylqg6cIFBzsCIi_yg9Dw0apQjn4q68d/pubchart?oid=567394680&format=interactive"></iframe>
+<iframe src="https://docs.google.com/spreadsheets/d/e/2PACX-1vTdKlNUiAKVlVSxDzsCRMxxCYhpmk7VhLZXN26GBsXnvlc7Oylqg6cIFBzsCIi_yg9Dw0apQjn4q68d/pubchart?oid=48996152&format=interactive"></iframe>
+<iframe src="https://docs.google.com/spreadsheets/d/e/2PACX-1vTdKlNUiAKVlVSxDzsCRMxxCYhpmk7VhLZXN26GBsXnvlc7Oylqg6cIFBzsCIi_yg9Dw0apQjn4q68d/pubchart?oid=2008042745&format=interactive"></iframe>
+<iframe src="https://docs.google.com/spreadsheets/d/e/2PACX-1vTdKlNUiAKVlVSxDzsCRMxxCYhpmk7VhLZXN26GBsXnvlc7Oylqg6cIFBzsCIi_yg9Dw0apQjn4q68d/pubchart?oid=1539491947&format=interactive"></iframe>
+<iframe src="https://docs.google.com/spreadsheets/d/e/2PACX-1vTdKlNUiAKVlVSxDzsCRMxxCYhpmk7VhLZXN26GBsXnvlc7Oylqg6cIFBzsCIi_yg9Dw0apQjn4q68d/pubchart?oid=1989097295&format=interactive"></iframe>
+
+
+   
+  </div>
+</div>
+
+<!-- ✅ Chart 2 -->
+<div id="chart2" class="tabcontent">
+  <h2>LTP VWAP diff-Amount Chart</h2>
+  <div class="legend">
+    <span><span class="legend-box solid-blue"></span> Call Amount</span>
+    <span><span class="legend-box solid-red"></span> Put Amount</span>
+    <span><span class="legend-box light-green"></span> LTP - VWAP Diff (Call)</span>
+    <span><span class="legend-box light-red"></span> LTP - VWAP Diff (Put)</span>
+  </div>
+  <div class="chart-grid">
+    <iframe src="https://docs.google.com/spreadsheets/d/e/2PACX-1vTdKlNUiAKVlVSxDzsCRMxxCYhpmk7VhLZXN26GBsXnvlc7Oylqg6cIFBzsCIi_yg9Dw0apQjn4q68d/pubchart?oid=1175382163&format=interactive"></iframe>
+ 
+<iframe src="https://docs.google.com/spreadsheets/d/e/2PACX-1vTdKlNUiAKVlVSxDzsCRMxxCYhpmk7VhLZXN26GBsXnvlc7Oylqg6cIFBzsCIi_yg9Dw0apQjn4q68d/pubchart?oid=1922749249&format=interactive"></iframe>
+<iframe src="https://docs.google.com/spreadsheets/d/e/2PACX-1vTdKlNUiAKVlVSxDzsCRMxxCYhpmk7VhLZXN26GBsXnvlc7Oylqg6cIFBzsCIi_yg9Dw0apQjn4q68d/pubchart?oid=705483333&format=interactive"></iframe>
+<iframe src="https://docs.google.com/spreadsheets/d/e/2PACX-1vTdKlNUiAKVlVSxDzsCRMxxCYhpmk7VhLZXN26GBsXnvlc7Oylqg6cIFBzsCIi_yg9Dw0apQjn4q68d/pubchart?oid=904483877&format=interactive"></iframe>
+<iframe src="https://docs.google.com/spreadsheets/d/e/2PACX-1vTdKlNUiAKVlVSxDzsCRMxxCYhpmk7VhLZXN26GBsXnvlc7Oylqg6cIFBzsCIi_yg9Dw0apQjn4q68d/pubchart?oid=1539030600&format=interactive"></iframe>
+<iframe src="https://docs.google.com/spreadsheets/d/e/2PACX-1vTdKlNUiAKVlVSxDzsCRMxxCYhpmk7VhLZXN26GBsXnvlc7Oylqg6cIFBzsCIi_yg9Dw0apQjn4q68d/pubchart?oid=645980446&format=interactive"></iframe>
+<iframe src="https://docs.google.com/spreadsheets/d/e/2PACX-1vTdKlNUiAKVlVSxDzsCRMxxCYhpmk7VhLZXN26GBsXnvlc7Oylqg6cIFBzsCIi_yg9Dw0apQjn4q68d/pubchart?oid=1388626122&format=interactive"></iframe>
+<iframe src="https://docs.google.com/spreadsheets/d/e/2PACX-1vTdKlNUiAKVlVSxDzsCRMxxCYhpmk7VhLZXN26GBsXnvlc7Oylqg6cIFBzsCIi_yg9Dw0apQjn4q68d/pubchart?oid=2045742962&format=interactive"></iframe>
+<iframe src="https://docs.google.com/spreadsheets/d/e/2PACX-1vTdKlNUiAKVlVSxDzsCRMxxCYhpmk7VhLZXN26GBsXnvlc7Oylqg6cIFBzsCIi_yg9Dw0apQjn4q68d/pubchart?oid=468254650&format=interactive"></iframe>
+<iframe src="https://docs.google.com/spreadsheets/d/e/2PACX-1vTdKlNUiAKVlVSxDzsCRMxxCYhpmk7VhLZXN26GBsXnvlc7Oylqg6cIFBzsCIi_yg9Dw0apQjn4q68d/pubchart?oid=1397756855&format=interactive"></iframe>
+<iframe src="https://docs.google.com/spreadsheets/d/e/2PACX-1vTdKlNUiAKVlVSxDzsCRMxxCYhpmk7VhLZXN26GBsXnvlc7Oylqg6cIFBzsCIi_yg9Dw0apQjn4q68d/pubchart?oid=252469178&format=interactive"></iframe>
+ 
+
+
+<iframe src="https://docs.google.com/spreadsheets/d/e/2PACX-1vTdKlNUiAKVlVSxDzsCRMxxCYhpmk7VhLZXN26GBsXnvlc7Oylqg6cIFBzsCIi_yg9Dw0apQjn4q68d/pubchart?oid=1093129059&format=interactive"></iframe>
+<iframe src="https://docs.google.com/spreadsheets/d/e/2PACX-1vTdKlNUiAKVlVSxDzsCRMxxCYhpmk7VhLZXN26GBsXnvlc7Oylqg6cIFBzsCIi_yg9Dw0apQjn4q68d/pubchart?oid=797108407&format=interactive"></iframe>
+
+<iframe src="https://docs.google.com/spreadsheets/d/e/2PACX-1vTdKlNUiAKVlVSxDzsCRMxxCYhpmk7VhLZXN26GBsXnvlc7Oylqg6cIFBzsCIi_yg9Dw0apQjn4q68d/pubchart?oid=2055600685&format=interactive"></iframe>
+<iframe src="https://docs.google.com/spreadsheets/d/e/2PACX-1vTdKlNUiAKVlVSxDzsCRMxxCYhpmk7VhLZXN26GBsXnvlc7Oylqg6cIFBzsCIi_yg9Dw0apQjn4q68d/pubchart?oid=1255982845&format=interactive"></iframe>
+<iframe src="https://docs.google.com/spreadsheets/d/e/2PACX-1vTdKlNUiAKVlVSxDzsCRMxxCYhpmk7VhLZXN26GBsXnvlc7Oylqg6cIFBzsCIi_yg9Dw0apQjn4q68d/pubchart?oid=520024954&format=interactive"></iframe>
+ 
+  </div>
+</div>
+
+<!-- ✅ Chart 3 -->
+<div id="chart3" class="tabcontent">
+  <h2>Change OI-VWAP Diff Chart</h2>
+  <div class="legend">
+    <span><span class="legend-box solid-blue"></span> Change Call OI</span>
+    <span><span class="legend-box solid-red"></span> Change Put OI</span>
+    <span><span class="legend-box light-green"></span> LTP - VWAP Diff (Call)</span>
+    <span><span class="legend-box light-red"></span> LTP - VWAP Diff (Put)</span>
+  </div>
+  <div class="chart-grid">
+    <iframe src="https://docs.google.com/spreadsheets/d/e/2PACX-1vTdKlNUiAKVlVSxDzsCRMxxCYhpmk7VhLZXN26GBsXnvlc7Oylqg6cIFBzsCIi_yg9Dw0apQjn4q68d/pubchart?oid=879867809&format=interactive"></iframe>
+<iframe src="https://docs.google.com/spreadsheets/d/e/2PACX-1vTdKlNUiAKVlVSxDzsCRMxxCYhpmk7VhLZXN26GBsXnvlc7Oylqg6cIFBzsCIi_yg9Dw0apQjn4q68d/pubchart?oid=601375044&format=interactive"></iframe>
+<iframe src="https://docs.google.com/spreadsheets/d/e/2PACX-1vTdKlNUiAKVlVSxDzsCRMxxCYhpmk7VhLZXN26GBsXnvlc7Oylqg6cIFBzsCIi_yg9Dw0apQjn4q68d/pubchart?oid=68591512&format=interactive"></iframe>
+<iframe src="https://docs.google.com/spreadsheets/d/e/2PACX-1vTdKlNUiAKVlVSxDzsCRMxxCYhpmk7VhLZXN26GBsXnvlc7Oylqg6cIFBzsCIi_yg9Dw0apQjn4q68d/pubchart?oid=451680632&format=interactive"></iframe>
+<iframe src="https://docs.google.com/spreadsheets/d/e/2PACX-1vTdKlNUiAKVlVSxDzsCRMxxCYhpmk7VhLZXN26GBsXnvlc7Oylqg6cIFBzsCIi_yg9Dw0apQjn4q68d/pubchart?oid=1637010661&format=interactive"></iframe>
+<iframe src="https://docs.google.com/spreadsheets/d/e/2PACX-1vTdKlNUiAKVlVSxDzsCRMxxCYhpmk7VhLZXN26GBsXnvlc7Oylqg6cIFBzsCIi_yg9Dw0apQjn4q68d/pubchart?oid=1231041857&format=interactive"></iframe>
+<iframe src="https://docs.google.com/spreadsheets/d/e/2PACX-1vTdKlNUiAKVlVSxDzsCRMxxCYhpmk7VhLZXN26GBsXnvlc7Oylqg6cIFBzsCIi_yg9Dw0apQjn4q68d/pubchart?oid=1121355159&format=interactive"></iframe>
+<iframe src="https://docs.google.com/spreadsheets/d/e/2PACX-1vTdKlNUiAKVlVSxDzsCRMxxCYhpmk7VhLZXN26GBsXnvlc7Oylqg6cIFBzsCIi_yg9Dw0apQjn4q68d/pubchart?oid=513064011&format=interactive"></iframe>
+<iframe src="https://docs.google.com/spreadsheets/d/e/2PACX-1vTdKlNUiAKVlVSxDzsCRMxxCYhpmk7VhLZXN26GBsXnvlc7Oylqg6cIFBzsCIi_yg9Dw0apQjn4q68d/pubchart?oid=1786425840&format=interactive"></iframe>
+<iframe src="https://docs.google.com/spreadsheets/d/e/2PACX-1vTdKlNUiAKVlVSxDzsCRMxxCYhpmk7VhLZXN26GBsXnvlc7Oylqg6cIFBzsCIi_yg9Dw0apQjn4q68d/pubchart?oid=1489459597&format=interactive"></iframe>
+<iframe src="https://docs.google.com/spreadsheets/d/e/2PACX-1vTdKlNUiAKVlVSxDzsCRMxxCYhpmk7VhLZXN26GBsXnvlc7Oylqg6cIFBzsCIi_yg9Dw0apQjn4q68d/pubchart?oid=1152405462&format=interactive"></iframe>
+   
+
+   
+<iframe src="https://docs.google.com/spreadsheets/d/e/2PACX-1vTdKlNUiAKVlVSxDzsCRMxxCYhpmk7VhLZXN26GBsXnvlc7Oylqg6cIFBzsCIi_yg9Dw0apQjn4q68d/pubchart?oid=512587118&format=interactive"></iframe>
+<iframe src="https://docs.google.com/spreadsheets/d/e/2PACX-1vTdKlNUiAKVlVSxDzsCRMxxCYhpmk7VhLZXN26GBsXnvlc7Oylqg6cIFBzsCIi_yg9Dw0apQjn4q68d/pubchart?oid=1575109831&format=interactive"></iframe>
+<iframe src="https://docs.google.com/spreadsheets/d/e/2PACX-1vTdKlNUiAKVlVSxDzsCRMxxCYhpmk7VhLZXN26GBsXnvlc7Oylqg6cIFBzsCIi_yg9Dw0apQjn4q68d/pubchart?oid=544357475&format=interactive"></iframe>
+<iframe src="https://docs.google.com/spreadsheets/d/e/2PACX-1vTdKlNUiAKVlVSxDzsCRMxxCYhpmk7VhLZXN26GBsXnvlc7Oylqg6cIFBzsCIi_yg9Dw0apQjn4q68d/pubchart?oid=1000374059&format=interactive"></iframe>
+ 
+  </div>
+</div>
+
+<!-- ✅ Chart 4 -->
+<div id="chart4" class="tabcontent">
+  <h2>OI-Amount Chart</h2>
+  <div class="iframe-grid">
+  <iframe src="https://docs.google.com/spreadsheets/d/e/2PACX-1vQ5Lvrxvflj_qRKt-eVIUlr3yltRJQgISwea-qRRDoI5tXMT3TFXiwy0pukbs6wjOfS1K_C9zNxtUra/pubchart?oid=1418487456&amp;format=interactive" class="oi-amount-frame"></iframe>
+    <iframe src="https://docs.google.com/spreadsheets/d/e/2PACX-1vQ5Lvrxvflj_qRKt-eVIUlr3yltRJQgISwea-qRRDoI5tXMT3TFXiwy0pukbs6wjOfS1K_C9zNxtUra/pubchart?oid=650783104&format=interactive" class="oi-amount-frame"></iframe>
+   
+      <iframe src="https://docs.google.com/spreadsheets/d/e/2PACX-1vQ5Lvrxvflj_qRKt-eVIUlr3yltRJQgISwea-qRRDoI5tXMT3TFXiwy0pukbs6wjOfS1K_C9zNxtUra/pubchart?oid=1513746669&amp;format=interactive" class="oi-amount-frame"></iframe>    
+    <iframe src="https://docs.google.com/spreadsheets/d/e/2PACX-1vQ5Lvrxvflj_qRKt-eVIUlr3yltRJQgISwea-qRRDoI5tXMT3TFXiwy0pukbs6wjOfS1K_C9zNxtUra/pubchart?oid=1503965889&format=interactive" class="oi-amount-frame"></iframe>
+   
+    <iframe src="https://docs.google.com/spreadsheets/d/e/2PACX-1vQ5Lvrxvflj_qRKt-eVIUlr3yltRJQgISwea-qRRDoI5tXMT3TFXiwy0pukbs6wjOfS1K_C9zNxtUra/pubchart?oid=991458618&amp;format=interactive" class="oi-amount-frame"></iframe>
+  <iframe src="https://docs.google.com/spreadsheets/d/e/2PACX-1vQ5Lvrxvflj_qRKt-eVIUlr3yltRJQgISwea-qRRDoI5tXMT3TFXiwy0pukbs6wjOfS1K_C9zNxtUra/pubchart?oid=1402124862&amp;format=interactive" class="oi-amount-frame"></iframe>
+
+
+
+
+ <!--
+  <iframe src="https://docs.google.com/spreadsheets/d/e/2PACX-1vTdKlNUiAKVlVSxDzsCRMxxCYhpmk7VhLZXN26GBsXnvlc7Oylqg6cIFBzsCIi_yg9Dw0apQjn4q68d/pubchart?oid=149799407&format=interactive" class="oi-amount-frame"></iframe>
+ 
+   -->
+</div>
+</div>
+
+ 
+<!-- ✅ Chart 5 -->
+<div id="chart5" class="tabcontent">
+  <h2>LTP_OI Chart</h2>
+   <div class="legend">
+    <span><span class="legend-box solid-blue"></span> Call OI</span>
+    <span><span class="legend-box solid-red"></span> Put OI</span>
+    <span><span class="legend-box light-green"></span> Call LTP</span>
+    <span><span class="legend-box light-red"></span> Put LTP</span>
+  </div>
+  <div class="chart-grid">
+   
+<iframe src="https://docs.google.com/spreadsheets/d/e/2PACX-1vTdKlNUiAKVlVSxDzsCRMxxCYhpmk7VhLZXN26GBsXnvlc7Oylqg6cIFBzsCIi_yg9Dw0apQjn4q68d/pubchart?oid=1507017152&format=interactive"></iframe>
+<iframe src="https://docs.google.com/spreadsheets/d/e/2PACX-1vTdKlNUiAKVlVSxDzsCRMxxCYhpmk7VhLZXN26GBsXnvlc7Oylqg6cIFBzsCIi_yg9Dw0apQjn4q68d/pubchart?oid=866713307&format=interactive"></iframe>
+<iframe src="https://docs.google.com/spreadsheets/d/e/2PACX-1vTdKlNUiAKVlVSxDzsCRMxxCYhpmk7VhLZXN26GBsXnvlc7Oylqg6cIFBzsCIi_yg9Dw0apQjn4q68d/pubchart?oid=833327057&format=interactive"></iframe>
+<iframe src="https://docs.google.com/spreadsheets/d/e/2PACX-1vTdKlNUiAKVlVSxDzsCRMxxCYhpmk7VhLZXN26GBsXnvlc7Oylqg6cIFBzsCIi_yg9Dw0apQjn4q68d/pubchart?oid=1978327196&format=interactive"></iframe>
+<iframe src="https://docs.google.com/spreadsheets/d/e/2PACX-1vTdKlNUiAKVlVSxDzsCRMxxCYhpmk7VhLZXN26GBsXnvlc7Oylqg6cIFBzsCIi_yg9Dw0apQjn4q68d/pubchart?oid=660619920&format=interactive"></iframe>
+<iframe src="https://docs.google.com/spreadsheets/d/e/2PACX-1vTdKlNUiAKVlVSxDzsCRMxxCYhpmk7VhLZXN26GBsXnvlc7Oylqg6cIFBzsCIi_yg9Dw0apQjn4q68d/pubchart?oid=964542073&format=interactive"></iframe>
+<iframe src="https://docs.google.com/spreadsheets/d/e/2PACX-1vTdKlNUiAKVlVSxDzsCRMxxCYhpmk7VhLZXN26GBsXnvlc7Oylqg6cIFBzsCIi_yg9Dw0apQjn4q68d/pubchart?oid=662034442&format=interactive"></iframe>
+<iframe src="https://docs.google.com/spreadsheets/d/e/2PACX-1vTdKlNUiAKVlVSxDzsCRMxxCYhpmk7VhLZXN26GBsXnvlc7Oylqg6cIFBzsCIi_yg9Dw0apQjn4q68d/pubchart?oid=487548152&format=interactive"></iframe>
+<iframe src="https://docs.google.com/spreadsheets/d/e/2PACX-1vTdKlNUiAKVlVSxDzsCRMxxCYhpmk7VhLZXN26GBsXnvlc7Oylqg6cIFBzsCIi_yg9Dw0apQjn4q68d/pubchart?oid=299499194&format=interactive"></iframe>
+<iframe src="https://docs.google.com/spreadsheets/d/e/2PACX-1vTdKlNUiAKVlVSxDzsCRMxxCYhpmk7VhLZXN26GBsXnvlc7Oylqg6cIFBzsCIi_yg9Dw0apQjn4q68d/pubchart?oid=392711424&format=interactive"></iframe>
+ <iframe src="https://docs.google.com/spreadsheets/d/e/2PACX-1vTdKlNUiAKVlVSxDzsCRMxxCYhpmk7VhLZXN26GBsXnvlc7Oylqg6cIFBzsCIi_yg9Dw0apQjn4q68d/pubchart?oid=1556966174&format=interactive"></iframe>
+<iframe src="https://docs.google.com/spreadsheets/d/e/2PACX-1vTdKlNUiAKVlVSxDzsCRMxxCYhpmk7VhLZXN26GBsXnvlc7Oylqg6cIFBzsCIi_yg9Dw0apQjn4q68d/pubchart?oid=2027084368&format=interactive"></iframe>
+<iframe src="https://docs.google.com/spreadsheets/d/e/2PACX-1vTdKlNUiAKVlVSxDzsCRMxxCYhpmk7VhLZXN26GBsXnvlc7Oylqg6cIFBzsCIi_yg9Dw0apQjn4q68d/pubchart?oid=1816766276&format=interactive"></iframe>
+<iframe src="https://docs.google.com/spreadsheets/d/e/2PACX-1vTdKlNUiAKVlVSxDzsCRMxxCYhpmk7VhLZXN26GBsXnvlc7Oylqg6cIFBzsCIi_yg9Dw0apQjn4q68d/pubchart?oid=960861598&format=interactive"></iframe>
+<iframe src="https://docs.google.com/spreadsheets/d/e/2PACX-1vTdKlNUiAKVlVSxDzsCRMxxCYhpmk7VhLZXN26GBsXnvlc7Oylqg6cIFBzsCIi_yg9Dw0apQjn4q68d/pubchart?oid=194721040&format=interactive"></iframe>
+<iframe src="https://docs.google.com/spreadsheets/d/e/2PACX-1vTdKlNUiAKVlVSxDzsCRMxxCYhpmk7VhLZXN26GBsXnvlc7Oylqg6cIFBzsCIi_yg9Dw0apQjn4q68d/pubchart?oid=1636532117&format=interactive"></iframe>
+<iframe src="https://docs.google.com/spreadsheets/d/e/2PACX-1vTdKlNUiAKVlVSxDzsCRMxxCYhpmk7VhLZXN26GBsXnvlc7Oylqg6cIFBzsCIi_yg9Dw0apQjn4q68d/pubchart?oid=979970151&format=interactive"></iframe>
+<iframe src="https://docs.google.com/spreadsheets/d/e/2PACX-1vTdKlNUiAKVlVSxDzsCRMxxCYhpmk7VhLZXN26GBsXnvlc7Oylqg6cIFBzsCIi_yg9Dw0apQjn4q68d/pubchart?oid=167906900&format=interactive"></iframe>
+<iframe src="https://docs.google.com/spreadsheets/d/e/2PACX-1vTdKlNUiAKVlVSxDzsCRMxxCYhpmk7VhLZXN26GBsXnvlc7Oylqg6cIFBzsCIi_yg9Dw0apQjn4q68d/pubchart?oid=137220520&format=interactive"></iframe>
+<iframe src="https://docs.google.com/spreadsheets/d/e/2PACX-1vTdKlNUiAKVlVSxDzsCRMxxCYhpmk7VhLZXN26GBsXnvlc7Oylqg6cIFBzsCIi_yg9Dw0apQjn4q68d/pubchart?oid=1334181889&format=interactive"></iframe>
+<iframe src="https://docs.google.com/spreadsheets/d/e/2PACX-1vTdKlNUiAKVlVSxDzsCRMxxCYhpmk7VhLZXN26GBsXnvlc7Oylqg6cIFBzsCIi_yg9Dw0apQjn4q68d/pubchart?oid=227028492&format=interactive"></iframe>
+ 
+  </div>
+</div>
+
+<!-- ✅ Chart 6 -->
+<div id="chart6" class="tabcontent">
+  <h2>Data</h2>
+  <iframe src="https://docs.google.com/spreadsheets/d/e/2PACX-1vQ5Lvrxvflj_qRKt-eVIUlr3yltRJQgISwea-qRRDoI5tXMT3TFXiwy0pukbs6wjOfS1K_C9zNxtUra/pubhtml?gid=1970058116&single=true" class="oi-amount-frame"></iframe>
+</div>
+
+<!-- ✅ Chart 8 -->
+<div id="chart8" class="tabcontent">
+  <h2>Raw Data</h2>
+  <!--
+  <iframe src="https://docs.google.com/spreadsheets/d/e/2PACX-1vQ5Lvrxvflj_qRKt-eVIUlr3yltRJQgISwea-qRRDoI5tXMT3TFXiwy0pukbs6wjOfS1K_C9zNxtUra/pubhtml?gid=1765629037&single=true" class="oi-amount-frame1"></iframe>
+  <iframe src="https://docs.google.com/spreadsheets/d/e/2PACX-1vQ5Lvrxvflj_qRKt-eVIUlr3yltRJQgISwea-qRRDoI5tXMT3TFXiwy0pukbs6wjOfS1K_C9zNxtUra/pubhtml?gid=1555388559&single=true" class="oi-amount-frame1"></iframe>
+  -->
+  <iframe src="https://docs.google.com/spreadsheets/d/e/2PACX-1vQ5Lvrxvflj_qRKt-eVIUlr3yltRJQgISwea-qRRDoI5tXMT3TFXiwy0pukbs6wjOfS1K_C9zNxtUra/pubhtml?gid=648250347&single=true" class="oi-amount-frame1"></iframe>
+  <iframe src="https://docs.google.com/spreadsheets/d/e/2PACX-1vQ5Lvrxvflj_qRKt-eVIUlr3yltRJQgISwea-qRRDoI5tXMT3TFXiwy0pukbs6wjOfS1K_C9zNxtUra/pubhtml?gid=1952424351&single=true" class="oi-amount-frame1"></iframe>
+  <!--
+   <iframe src="https://docs.google.com/spreadsheets/d/e/2PACX-1vQ5Lvrxvflj_qRKt-eVIUlr3yltRJQgISwea-qRRDoI5tXMT3TFXiwy0pukbs6wjOfS1K_C9zNxtUra/pubhtml?gid=2088791481&single=true" class="oi-amount-frame1"></iframe>
+
+  <iframe src="https://docs.google.com/spreadsheets/d/e/2PACX-1vQ5Lvrxvflj_qRKt-eVIUlr3yltRJQgISwea-qRRDoI5tXMT3TFXiwy0pukbs6wjOfS1K_C9zNxtUra/pubhtml?gid=1369780308&single=true" class="oi-amount-frame1"></iframe>
+  <iframe src="https://docs.google.com/spreadsheets/d/e/2PACX-1vQ5Lvrxvflj_qRKt-eVIUlr3yltRJQgISwea-qRRDoI5tXMT3TFXiwy0pukbs6wjOfS1K_C9zNxtUra/pubhtml?gid=1423639445&single=true" class="oi-amount-frame1"></iframe>
+-->
+</div>
+
+ 
+  <!-- ✅ Chart 7 -->
+<div id="chart7" class="tabcontent">
+  <h2>Stocks</h2>
+  <iframe src="https://docs.google.com/spreadsheets/d/e/2PACX-1vSA5vQhFswmLtmvKkdQejxkj8uQIrAuIqTxruTjeetb9xVr5uRMNKm--Gux9TryBUQbJBtZ1LBWyYAF/pubhtml?gid=1037771693&amp;single=true&amp;widget=true&amp;headers=false" class="oi-amount-frame"></iframe>
+</div>
+
+  <!-- ✅ Chart 9 -->
+<div id="chart9" class="tabcontent">
+  <h2>OI-CCOI-VWAP Diff Chart</h2>
+  <div class="legend">
+    <span><span class="legend-box solid-blue"></span> Call OI</span>
+    <span><span class="legend-box solid-red"></span> Put OI</span>
+    <span><span class="legend-box dotted-blue"></span> Change OI - Call</span>
+    <span><span class="legend-box dotted-red"></span> Change OI - Put</span>
+    <span><span class="legend-box light-green"></span> LTP - VWAP Diff (Call)</span>
+    <span><span class="legend-box light-red"></span> LTP - VWAP Diff (Put)</span>
+  </div>
+  <div class="chart-grid">
+
+<iframe src="https://docs.google.com/spreadsheets/d/e/2PACX-1vQ5Lvrxvflj_qRKt-eVIUlr3yltRJQgISwea-qRRDoI5tXMT3TFXiwy0pukbs6wjOfS1K_C9zNxtUra/pubchart?oid=803193799&amp;format=interactive"></iframe>
+        <iframe src="https://docs.google.com/spreadsheets/d/e/2PACX-1vQ5Lvrxvflj_qRKt-eVIUlr3yltRJQgISwea-qRRDoI5tXMT3TFXiwy0pukbs6wjOfS1K_C9zNxtUra/pubchart?oid=1774106736&amp;format=interactive"></iframe>
+
+        <iframe src="https://docs.google.com/spreadsheets/d/e/2PACX-1vQ5Lvrxvflj_qRKt-eVIUlr3yltRJQgISwea-qRRDoI5tXMT3TFXiwy0pukbs6wjOfS1K_C9zNxtUra/pubchart?oid=706793629&amp;format=interactive"></iframe>
+    <iframe src="https://docs.google.com/spreadsheets/d/e/2PACX-1vQ5Lvrxvflj_qRKt-eVIUlr3yltRJQgISwea-qRRDoI5tXMT3TFXiwy0pukbs6wjOfS1K_C9zNxtUra/pubchart?oid=2094820521&amp;format=interactive"></iframe>
+    <iframe src="https://docs.google.com/spreadsheets/d/e/2PACX-1vQ5Lvrxvflj_qRKt-eVIUlr3yltRJQgISwea-qRRDoI5tXMT3TFXiwy0pukbs6wjOfS1K_C9zNxtUra/pubchart?oid=1104113578&amp;format=interactive"></iframe>
+    <iframe src="https://docs.google.com/spreadsheets/d/e/2PACX-1vQ5Lvrxvflj_qRKt-eVIUlr3yltRJQgISwea-qRRDoI5tXMT3TFXiwy0pukbs6wjOfS1K_C9zNxtUra/pubchart?oid=1744028156&amp;format=interactive"></iframe>
+    <iframe src="https://docs.google.com/spreadsheets/d/e/2PACX-1vQ5Lvrxvflj_qRKt-eVIUlr3yltRJQgISwea-qRRDoI5tXMT3TFXiwy0pukbs6wjOfS1K_C9zNxtUra/pubchart?oid=1418383130&amp;format=interactive"></iframe>
+
+        <iframe src="https://docs.google.com/spreadsheets/d/e/2PACX-1vQ5Lvrxvflj_qRKt-eVIUlr3yltRJQgISwea-qRRDoI5tXMT3TFXiwy0pukbs6wjOfS1K_C9zNxtUra/pubchart?oid=1770092151&amp;format=interactive"></iframe>
+    <iframe src="https://docs.google.com/spreadsheets/d/e/2PACX-1vQ5Lvrxvflj_qRKt-eVIUlr3yltRJQgISwea-qRRDoI5tXMT3TFXiwy0pukbs6wjOfS1K_C9zNxtUra/pubchart?oid=199112051&amp;format=interactive"></iframe>
+    <iframe src="https://docs.google.com/spreadsheets/d/e/2PACX-1vQ5Lvrxvflj_qRKt-eVIUlr3yltRJQgISwea-qRRDoI5tXMT3TFXiwy0pukbs6wjOfS1K_C9zNxtUra/pubchart?oid=952474926&amp;format=interactive"></iframe>
+    <iframe src="https://docs.google.com/spreadsheets/d/e/2PACX-1vQ5Lvrxvflj_qRKt-eVIUlr3yltRJQgISwea-qRRDoI5tXMT3TFXiwy0pukbs6wjOfS1K_C9zNxtUra/pubchart?oid=2025273832&amp;format=interactive"></iframe>
+    <iframe src="https://docs.google.com/spreadsheets/d/e/2PACX-1vQ5Lvrxvflj_qRKt-eVIUlr3yltRJQgISwea-qRRDoI5tXMT3TFXiwy0pukbs6wjOfS1K_C9zNxtUra/pubchart?oid=385681292&amp;format=interactive"></iframe>
+    <iframe src="https://docs.google.com/spreadsheets/d/e/2PACX-1vQ5Lvrxvflj_qRKt-eVIUlr3yltRJQgISwea-qRRDoI5tXMT3TFXiwy0pukbs6wjOfS1K_C9zNxtUra/pubchart?oid=1692038241&amp;format=interactive"></iframe>
+    <iframe src="https://docs.google.com/spreadsheets/d/e/2PACX-1vQ5Lvrxvflj_qRKt-eVIUlr3yltRJQgISwea-qRRDoI5tXMT3TFXiwy0pukbs6wjOfS1K_C9zNxtUra/pubchart?oid=313543024&amp;format=interactive"></iframe>
+    <iframe src="https://docs.google.com/spreadsheets/d/e/2PACX-1vQ5Lvrxvflj_qRKt-eVIUlr3yltRJQgISwea-qRRDoI5tXMT3TFXiwy0pukbs6wjOfS1K_C9zNxtUra/pubchart?oid=1763013981&amp;format=interactive"></iframe>
+    <iframe src="https://docs.google.com/spreadsheets/d/e/2PACX-1vQ5Lvrxvflj_qRKt-eVIUlr3yltRJQgISwea-qRRDoI5tXMT3TFXiwy0pukbs6wjOfS1K_C9zNxtUra/pubchart?oid=831657942&amp;format=interactive"></iframe>
+    <iframe src="https://docs.google.com/spreadsheets/d/e/2PACX-1vQ5Lvrxvflj_qRKt-eVIUlr3yltRJQgISwea-qRRDoI5tXMT3TFXiwy0pukbs6wjOfS1K_C9zNxtUra/pubchart?oid=2063948723&amp;format=interactive"></iframe>
+    <iframe src="https://docs.google.com/spreadsheets/d/e/2PACX-1vQ5Lvrxvflj_qRKt-eVIUlr3yltRJQgISwea-qRRDoI5tXMT3TFXiwy0pukbs6wjOfS1K_C9zNxtUra/pubchart?oid=548923849&amp;format=interactive"></iframe>
+    <iframe src="https://docs.google.com/spreadsheets/d/e/2PACX-1vQ5Lvrxvflj_qRKt-eVIUlr3yltRJQgISwea-qRRDoI5tXMT3TFXiwy0pukbs6wjOfS1K_C9zNxtUra/pubchart?oid=575746495&amp;format=interactive"></iframe>
+    <iframe src="https://docs.google.com/spreadsheets/d/e/2PACX-1vQ5Lvrxvflj_qRKt-eVIUlr3yltRJQgISwea-qRRDoI5tXMT3TFXiwy0pukbs6wjOfS1K_C9zNxtUra/pubchart?oid=521346185&amp;format=interactive"></iframe>
+    <iframe src="https://docs.google.com/spreadsheets/d/e/2PACX-1vQ5Lvrxvflj_qRKt-eVIUlr3yltRJQgISwea-qRRDoI5tXMT3TFXiwy0pukbs6wjOfS1K_C9zNxtUra/pubchart?oid=1387283168&amp;format=interactive"></iframe>
+    <iframe src="https://docs.google.com/spreadsheets/d/e/2PACX-1vQ5Lvrxvflj_qRKt-eVIUlr3yltRJQgISwea-qRRDoI5tXMT3TFXiwy0pukbs6wjOfS1K_C9zNxtUra/pubchart?oid=2025182217&amp;format=interactive"></iframe>
+    <iframe src="https://docs.google.com/spreadsheets/d/e/2PACX-1vQ5Lvrxvflj_qRKt-eVIUlr3yltRJQgISwea-qRRDoI5tXMT3TFXiwy0pukbs6wjOfS1K_C9zNxtUra/pubchart?oid=236540291&amp;format=interactive"></iframe>
+     
+    <iframe src="https://docs.google.com/spreadsheets/d/e/2PACX-1vQ5Lvrxvflj_qRKt-eVIUlr3yltRJQgISwea-qRRDoI5tXMT3TFXiwy0pukbs6wjOfS1K_C9zNxtUra/pubchart?oid=319939010&amp;format=interactive"></iframe>
+
+    <iframe src="https://docs.google.com/spreadsheets/d/e/2PACX-1vQ5Lvrxvflj_qRKt-eVIUlr3yltRJQgISwea-qRRDoI5tXMT3TFXiwy0pukbs6wjOfS1K_C9zNxtUra/pubchart?oid=2064959247&amp;format=interactive"></iframe>
+
+
+  </div>
+</div>
+
+<script>
+function openChart(evt, chartName) {
+  var i, tabcontent, tablinks;
+  tabcontent = document.getElementsByClassName("tabcontent");
+  for (i = 0; i < tabcontent.length; i++) {
+    tabcontent[i].style.display = "none";
+  }
+  tablinks = document.getElementsByClassName("tablinks");
+  for (i = 0; i < tablinks.length; i++) {
+    tablinks[i].className = tablinks[i].className.replace(" active", "");
+  }
+  document.getElementById(chartName).style.display = "block";
+  evt.currentTarget.className += " active";
+}
+// Auto-open first tab
+document.getElementById("defaultOpen").click();
+</script>
+
+  <div style="text-align:center; margin:20px;">
+  <button onclick="refreshCharts()">🔄 Refresh Charts</button>
+  <label for="refreshInterval">Auto-refresh: </label>
+  <select id="refreshInterval" onchange="setRefreshInterval()">
+    <option value="0">Off</option>
+    <option value="10000">10s</option>
+    <option value="20000">20s</option>
+    <option value="30000" selected>30s</option>
+    <option value="60000">60s</option>
+  </select>
+  <div id="lastUpdateTime" style="margin-top:10px; font-size:14px; color:#555;">
+    <!-- last updated time will appear here -->
+  </div>
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+  function openChart(evt, chartName) {
+    const tabcontent = document.getElementsByClassName("tabcontent");
+    for (let i = 0; i < tabcontent.length; i++) {
+      tabcontent[i].style.display = "none";
+    }
+    const tablinks = document.getElementsByClassName("tablinks");
+    for (let i = 0; i < tablinks.length; i++) {
+      tablinks[i].className = tablinks[i].className.replace(" active", "");
+    }
+    document.getElementById(chartName).style.display = "block";
+    evt.currentTarget.className += " active";
+  }
+function isMarketOpen() {
+    const now = new Date();
+    const hours = now.getHours();
+    const minutes = now.getMinutes();
+    // Market hours: 09:00 to 15:30
+    return !(hours < 9 || (hours === 15 && minutes > 30) || hours > 15);
+  }
+
+ 
+  function refreshCharts() {
+    if (!isMarketOpen()) return; // Skip outside market hours
+    const iframes = document.querySelectorAll("iframe");
+    iframes.forEach(iframe => {
+      iframe.src = iframe.src; // reload iframe
+    });
+    displayLastUpdateTime();
+  }
+
+  let refreshTimer;
+  function setRefreshInterval() {
+    clearInterval(refreshTimer);
+    const val = document.getElementById("refreshInterval").value;
+    if (val > 0) {
+      refreshTimer = setInterval(refreshCharts, val);
+    }
+  }
+
+  function displayLastUpdateTime() {
+    const currentDate = new Date();
+    const options = {
+      weekday: 'short', year: 'numeric', month: 'short', day: 'numeric',
+      hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true
+    };
+    const formattedTime = currentDate.toLocaleString('en-IN', options);
+    document.getElementById("lastUpdateTime").innerText = `Last updated on: ${formattedTime}`;
+  }
+
+  // ✅ Initialize on load
+  document.getElementById("defaultOpen").click();
+  setRefreshInterval();
+  displayLastUpdateTime();
+
+  // Expose functions globally for buttons
+  window.openChart = openChart;
+  window.setRefreshInterval = setRefreshInterval;
+  window.refreshCharts = refreshCharts;
+});
+</script>
+</body>
+</html>
+
