@@ -368,63 +368,9 @@
 
   
 !-- ✅ Chart 1 -->
-<!DOCTYPE html>
-<html>
-<head>
-  <meta charset="UTF-8">
-  <title>OI-CCOI-LVD Multi-Strike Dashboard</title>
-  <style>
-    body { font-family: Arial, sans-serif; background:#f8f9fd; padding:20px; }
-    .legend { margin:15px 0; font-size:14px; }
-    .legend span { margin-right:15px; }
-    .legend-box { display:inline-block; width:12px; height:12px; margin-right:5px; vertical-align:middle; }
-    .solid-blue { background:#0066ff; }
-    .solid-red { background:#ff3333; }
-    .dotted-blue { border:2px dotted #0066ff; }
-    .dotted-red { border:2px dotted #ff3333; }
-    .light-green { background:#33cc99; }
-    .light-red { background:#ff6666; }
-
-    .strike-btn {cursor:pointer; user-select:none; margin:4px;}
-    .strike-btn .btn-text {
-      display:inline-block; padding:12px 28px; background:#eef4ff; border:2px solid #4488ff;
-      border-radius:16px; font-weight:bold; font-size:16px; color:#003366; transition:all .3s;
-    }
-    .strike-btn:hover .btn-text {background:#dde8ff; transform:scale(1.07);}
-    .strike-btn.selected .btn-text {
-      background:#0044cc !important; color:white !important;
-      box-shadow:0 6px 20px rgba(0,70,200,.5); transform:scale(1.05);
-    }
-
-    /* SMART RESPONSIVE GRID — AUTO MORE CHARTS WHEN ZOOMED IN */
-    #chart-grid-chart1 {
-      display: grid;
-      gap: 40px;
-      margin-top: 25px;
-      grid-template-columns: repeat(auto-fit, minmax(850px, 1fr));
-    }
-
-    /* Inside each strike block */
-    .strike-block > div {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 20px;
-    }
-
-    /* Responsive adjustments */
-    @media (max-width: 1800px) { #chart-grid-chart1 { grid-template-columns: repeat(auto-fit, minmax(800px, 1fr)); }}
-    @media (max-width: 1500px) { #chart-grid-chart1 { grid-template-columns: repeat(auto-fit, minmax(750px, 1fr)); }}
-    @media (max-width: 1200px) { 
-      #chart-grid-chart1 { grid-template-columns: 1fr !important; }
-      .strike-block > div { grid-template-columns: 1fr !important; }
-    }
-  </style>
-</head>
-<body>
-
-<div id="chart1">
-  <h2 style="text-align:center; color:#003366;">OI - CCOI - LVD Multi-Strike Dashboard</h2>
-  
+<!-- OI-CCOI-LVD Chart -->
+<div id="chart1" class="tabcontent">
+  <h2>OI-CCOI-LVD Chart</h2>
   <div class="legend">
     <span><span class="legend-box solid-blue"></span> Call OI</span>
     <span><span class="legend-box solid-red"></span> Put OI</span>
@@ -434,16 +380,22 @@
     <span><span class="legend-box light-red"></span> LTP - LVD(Put)</span>
   </div>
 
-  <div style="margin:20px 0; text-align:center;">
-    <button onclick="clearSelection()" style="padding:10px 20px; font-size:16px;">Clear All</button>
-    <span style="margin-left:25px; font-size:18px; color:#222;">
-      Selected: <strong><span id="selected-count">0</span>/20</strong> strikes
+  <div style="margin:15px 0; font-size:16px;">
+    <button onclick="clearSelection()">Clear All</button>
+    <span style="margin-left:25px; color:#222;">
+      Selected: <strong><span id="selected-count">0</span></strong> strikes
     </span>
   </div>
 
-  <div id="checkboxes-chart1" style="display:flex; flex-wrap:wrap; justify-content:center; gap:12px; margin-bottom:30px;"></div>
+  <div id="checkboxes-chart1" style="display:flex; flex-wrap:wrap; gap:14px; margin-bottom:25px;"></div>
 
-  <div id="chart-grid-chart1"></div>
+  <!-- 2 STRIKE BLOCKS PER ROW = 4 CHARTS PER ROW -->
+  <div id="chart-grid-chart1"
+       style="display:grid;
+              grid-template-columns:1fr 1fr;
+              gap:40px;
+              margin-top:20px;">
+  </div>
 </div>
 
 <script>
@@ -470,48 +422,52 @@ document.addEventListener("DOMContentLoaded", () => {
   const baseURL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQwdBNIekjQua_YjtFzp4hCVs7XUHN4UilhgNG_wZy2w-gfFZUds2hr7lyqqrctXDQxtk9wKp3gRz_-/pubchart?format=interactive&oid=";
 
   const checkboxContainer = document.getElementById("checkboxes-chart1");
-  const chartContainer = document.getElementById("chart-grid-chart1");
+  const chartContainer    = document.getElementById("chart-grid-chart1");
   const selectedCountDisplay = document.getElementById("selected-count");
   const selectedStrikes = new Set();
 
-  // Sort strikes ascending
-  Object.keys(charts1).sort((a,b) => +a - +b).forEach(strike => {
-    // Button
+  Object.keys(charts1).sort((a,b)=>+a-+b).forEach(strike => {
+    // Toggle button
     const label = document.createElement("label");
     label.className = "strike-btn";
     label.innerHTML = `<input type="checkbox" id="cb-${strike}" style="display:none;"><span class="btn-text">${strike}</span>`;
     checkboxContainer.appendChild(label);
 
-    // Strike block
+    // One strike block (title + 1 or 2 charts)
     const block = document.createElement("div");
     block.className = "strike-block";
     block.style.display = "none";
-    block.style.border = "4px solid #3366ff";
-    block.style.borderRadius = "20px";
-    block.style.padding = "22px";
+    block.style.border = "3px solid #3366ff";
+    block.style.borderRadius = "18px";
+    block.style.padding = "20px";
     block.style.background = "linear-gradient(135deg, #f9fbff, #f0f5ff)";
-    block.style.boxShadow = "0 10px 30px rgba(0,50,150,0.15)";
+    block.style.boxShadow = "0 8px 25px rgba(0,50,150,0.1)";
 
     const title = document.createElement("h3");
     title.textContent = `Strike ${strike}`;
-    title.style.cssText = "text-align:center; margin:0 0 20px 0; color:#003399; font-size:24px; font-weight:bold;";
+    title.style.cssText = "text-align:center; margin:0 0 18px 0; color:#003399; font-size:22px; font-weight:bold;";
     block.appendChild(title);
 
     const chartsRow = document.createElement("div");
+    chartsRow.style.display = "grid";
+    chartsRow.style.gridTemplateColumns = "1fr 1fr";
+    chartsRow.style.gap = "18px";
 
+    // Chart 1 (always exists)
     const iframe1 = document.createElement("iframe");
     iframe1.src = baseURL + charts1[strike];
-    iframe1.style.width = "100%"; iframe1.style.height = "440px";
-    iframe1.style.border = "none"; iframe1.style.borderRadius = "16px";
-    iframe1.style.boxShadow = "0 6px 20px rgba(0,0,0,0.15)";
+    iframe1.style.width = "100%"; iframe1.style.height = "420px";
+    iframe1.style.border = "none"; iframe1.style.borderRadius = "14px";
+    iframe1.style.boxShadow = "0 4px 15px rgba(0,0,0,0.12)";
     chartsRow.appendChild(iframe1);
 
+    // Chart 2 (only if exists)
     if (charts2[strike]) {
       const iframe2 = document.createElement("iframe");
       iframe2.src = baseURL + charts2[strike];
-      iframe2.style.width = "100%"; iframe2.style.height = "440px";
-      iframe2.style.border = "none"; iframe2.style.borderRadius = "16px";
-      iframe2.style.boxShadow = "0 6px 20px rgba(0,0,0,0.15)";
+      iframe2.style.width = "100%"; iframe2.style.height = "420px";
+      iframe2.style.border = "none"; iframe2.style.borderRadius = "14px";
+      iframe2.style.boxShadow = "0 4px 15px rgba(0,0,0,0.12)";
       chartsRow.appendChild(iframe2);
     }
 
@@ -519,34 +475,48 @@ document.addEventListener("DOMContentLoaded", () => {
     chartContainer.appendChild(block);
 
     // Toggle
-    label.onclick = e => {
+    label.addEventListener("click", e => {
       e.preventDefault();
       if (selectedStrikes.has(strike)) {
         selectedStrikes.delete(strike);
         block.style.display = "none";
+        label.querySelector("input").checked = false;
       } else {
-        if (selectedStrikes.size >= MAX_STRIKES) { alert("Maximum 20 strikes"); return; }
+        if (selectedStrikes.size >= MAX_STRIKES) { alert("Max 20 strikes"); return; }
         selectedStrikes.add(strike);
         block.style.display = "block";
+        label.querySelector("input").checked = true;
       }
       selectedCountDisplay.textContent = selectedStrikes.size;
-      document.querySelectorAll(".strike-btn").forEach(b => {
-        b.classList.toggle("selected", selectedStrikes.has(b.querySelector("span").textContent));
-      });
-    };
+      document.querySelectorAll(".strike-btn").forEach(b => b.classList.toggle("selected", b.querySelector("input").checked));
+    });
   });
 
   window.clearSelection = () => {
     selectedStrikes.clear();
     document.querySelectorAll(".strike-block").forEach(b => b.style.display = "none");
-    document.querySelectorAll(".strike-btn").forEach(b => b.classList.remove("selected"));
+    document.querySelectorAll('input[type=checkbox]').forEach(c => c.checked = false);
     selectedCountDisplay.textContent = "0";
+    document.querySelectorAll(".strike-btn").forEach(b => b.classList.remove("selected"));
   };
+
+  // Styling
+  const style = document.createElement("style");
+  style.textContent = `
+    .strike-btn {cursor:pointer; user-select:none;}
+    .strike-btn .btn-text {padding:12px 26px; background:#eef4ff; border:2px solid #4488ff;
+      border-radius:14px; font-weight:bold; font-size:16px; color:#003366; transition:all .25s;}
+    .strike-btn:hover .btn-text {background:#dde8ff; transform:scale(1.06);}
+    .strike-btn.selected .btn-text, .strike-btn input:checked + .btn-text {
+      background:#0044cc !important; color:white !important; box-shadow:0 5px 15px rgba(0,70,200,.4);}
+    @media (max-width: 1200px) {
+      #chart-grid-chart1 {grid-template-columns:1fr !important;}
+      .strike-block > div {grid-template-columns:1fr !important;}
+    }
+  `;
+  document.head.appendChild(style);
 });
 </script>
-
-</body>
-</html>
 
   
   <!-- 
