@@ -368,7 +368,7 @@
 
 
 <!-- ✅ Chart 1 -->
-<!-- ✅ Chart 1 -->
+<!-- Chart 1 -->
 <div id="chart1" class="tabcontent">
   <h2>OI-CCOI-LVD Chart</h2>
  
@@ -381,12 +381,15 @@
     <span><span class="legend-box light-red"></span> LTP - LVD(Put)</span>
   </div>
 
-  <div style="margin: 10px 0;">
-    <button onclick="selectStrike(null)">🔲 Clear Selection</button>
+  <div style="margin: 15px 0;">
+    <button onclick="clearSelection()">Clear All</button>
+    <span style="margin-left:20px; color:#555;">
+      Selected: <span id="selected-count">0</span>/2 strikes
+    </span>
   </div>
 
-  <div id="checkboxes-chart1" class="checkboxes" style="margin-bottom:15px; display:flex; flex-wrap: wrap; gap:12px;"></div>
-  <div id="chart-grid-chart1" class="chart-grid"></div>
+  <div id="checkboxes-chart1" class="checkboxes" style="display:flex; flex-wrap:wrap; gap:12px; margin-bottom:20px;"></div>
+  <div id="chart-grid-chart1" class="chart-grid" style="display:grid; grid-template-columns:1fr 1fr; gap:20px;"></div>
 </div>
 
 <script>
@@ -405,106 +408,156 @@ document.addEventListener("DOMContentLoaded", () => {
     25850: "1397258143",
   };
 
-  const baseURL1 = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQwdBNIekjQua_YjtFzp4hCVs7XUHN4UilhgNG_wZy2w-gfFZUds2hr7lyqqrctXDQxtk9wKp3gRz_-/pubchart?format=interactive&oid=";
+  const baseURL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQwdBNIekjQua_YjtFzp4hCVs7XUHN4UilhgNG_wZy2w-gfFZUds2hr7lyqqrctXDQxtk9wKp3gRz_-/pubchart?format=interactive&oid=";
 
-  const checkboxContainer1 = document.getElementById("checkboxes-chart1");
-  const chartContainer1 = document.getElementById("chart-grid-chart1");
+  const checkboxContainer = document.getElementById("checkboxes-chart1");
+  const chartContainer = document.getElementById("chart-grid-chart1");
+  const selectedCountDisplay = document.getElementById("selected-count");
 
-  let currentSelectedStrike = null;  // Track currently selected strike
+  const selectedStrikes = new Set(); // Track up to 2 selected strikes
 
-  Object.entries(charts1).forEach(([strike, oid]) => {
-    // Create clickable label (acts like radio button)
+  // Create strike buttons and chart wrappers
+  Object.keys(charts1).forEach(strike => {
+    // Custom styled button (acts as toggle)
     const label = document.createElement("label");
-    label.className = "strike-label";
+    label.className = "strike-btn";
     label.innerHTML = `
-      <input type="radio" name="strikeGroup" id="cb1-strike${strike}" value="${strike}" style="display:none;">
-      <span class="custom-radio">${strike}</span>
+      <input type="checkbox" id="cb-${strike}" style="display:none;">
+      <span class="btn-text">${strike}</span>
     `;
-    checkboxContainer1.appendChild(label);
+    checkboxContainer.appendChild(label);
 
-    // Create wrapper for charts
+    // Chart wrapper (holds both charts for this strike)
     const wrapper = document.createElement("div");
-    wrapper.id = `wrapper1-${strike}`;
-    wrapper.style.display = "none";  // Hidden by default
-    wrapper.style.marginBottom = "30px";
+    wrapper.id = `wrapper-${strike}`;
+    wrapper.className = "strike-charts-wrapper";
+    wrapper.style.display = "none";
+    wrapper.style.border = "2px solid #ddd";
+    wrapper.style.borderRadius = "12px";
+    wrapper.style.padding = "15px";
+    wrapper.style.background = "#fafafa";
 
     const title = document.createElement("h3");
-    title.innerText = `Strike ${strike}`;
+    title.textContent = `Strike ${strike}`;
     title.style.textAlign = "center";
-    title.style.margin = "10px 0";
+    title.style.margin = "0 0 15px 0";
+    title.style.color = "#333";
     wrapper.appendChild(title);
 
     // Chart 1
     const iframe1 = document.createElement("iframe");
-    iframe1.src = `${baseURL1}${oid}`;
+    iframe1.src = baseURL + charts1[strike];
     iframe1.style.width = "100%";
-    iframe1.style.height = "420px";
-    iframe1.style.border = "1px solid #ddd";
+    iframe1.style.height = "380px";
+    iframe1.style.border = "none";
     iframe1.style.borderRadius = "8px";
     wrapper.appendChild(iframe1);
 
-    // Chart 2 (if exists)
+    // Chart 2
     if (charts2[strike]) {
       const iframe2 = document.createElement("iframe");
-      iframe2.src = `${baseURL1}${charts2[strike]}`;
+      iframe2.src = baseURL + charts2[strike];
       iframe2.style.width = "100%";
-      iframe2.style.height = "420px";
-      iframe2.style.border = "1px solid #ddd";
+      iframe2.style.height = "380px";
+      iframe2.style.border = "none";
       iframe2.style.borderRadius = "8px";
       iframe2.style.marginTop = "15px";
       wrapper.appendChild(iframe2);
     }
 
-    chartContainer1.appendChild(wrapper);
+    chartContainer.appendChild(wrapper);
 
     // Click handler
-    label.addEventListener("click", () => {
-      selectStrike(strike);
+    label.addEventListener("click", (e) => {
+      e.preventDefault();
+      toggleStrike(strike);
     });
   });
 
-  // Function to show only one strike's charts
-  window.selectStrike = function(strike) {
-    // Hide all wrappers
-    Object.keys(charts1).forEach(s => {
-      document.getElementById(`wrapper1-${s}`).style.display = "none";
-      const radio = document.getElementById(`cb1-strike${s}`);
-      if (radio) radio.checked = false;
+  function toggleStrike(strike) {
+    const checkbox = document.getElementById(`cb-${strike}`);
+    const wrapper = document.getElementById(`wrapper-${strike}`);
+
+    if (selectedStrikes.has(strike)) {
+      // Deselect
+      selectedStrikes.delete(strike);
+      checkbox.checked = false;
+      wrapper.style.display = "none";
+    } else {
+      // Try to select
+      if (selectedStrikes.size >= 2) {
+        alert("Maximum 2 strikes can be compared at a time.");
+        return;
+      }
+      selectedStrikes.add(strike);
+      checkbox.checked = true;
+      wrapper.style.display = "block";
+    }
+
+    updateUI();
+  }
+
+  function updateUI() {
+    selectedCountDisplay.textContent = selectedStrikes.size;
+
+    // Update button styles
+    document.querySelectorAll(".strike-btn").forEach(btn => {
+      const input = btn.querySelector("input");
+      if (input.checked) {
+        btn.classList.add("selected");
+      } else {
+        btn.classList.remove("selected");
+      }
     });
 
-    if (strike === null) {
-      currentSelectedStrike = null;
-      return;
+    // Adjust grid: 1 or 2 columns
+    if (selectedStrikes.size <= 1) {
+      chartContainer.style.gridTemplateColumns = "1fr";
+    } else {
+      chartContainer.style.gridTemplateColumns = "1fr 1fr";
     }
+  }
 
-    // Show selected
-    document.getElementById(`wrapper1-${strike}`).style.display = "block";
-    document.getElementById(`cb1-strike${strike}`).checked = true;
-    currentSelectedStrike = strike;
-
-    // Optional: smooth scroll to charts
-    document.getElementById("chart-grid-chart1").scrollIntoView({ behavior: "smooth", block: "start" });
+  window.clearSelection = function() {
+    selectedStrikes.clear();
+    document.querySelectorAll('input[type="checkbox"]').forEach(cb => {
+      cb.checked = false;
+      const strike = cb.id.split("-")[1];
+      document.getElementById(`wrapper-${strike}`).style.display = "none";
+    });
+    updateUI();
   };
 
-  // Optional: nice styling for custom radio buttons
+  // Beautiful button styles
   const style = document.createElement("style");
   style.textContent = `
-    .strike-label { cursor: pointer; }
-    .custom-radio {
+    .strike-btn {
+      cursor: pointer;
+      user-select: none;
+    }
+    .strike-btn .btn-text {
       display: inline-block;
-      padding: 8px 16px;
+      padding: 10px 18px;
+      background: #f0f0f0;
       border: 2px solid #ccc;
-      border-radius: 8px;
-      background: #f9f9f9;
+      border-radius: 10px;
+      font-weight: bold;
       transition: all 0.2s;
     }
-    .custom-radio:hover { background: #eef; border-color: #66f; }
-    input[name="strikeGroup"]:checked + .custom-radio,
-    .custom-radio:active {
+    .strike-btn:hover .btn-text {
+      background: #e0e0ff;
+      border-color: #0066ff;
+    }
+    .strike-btn.selected .btn-text,
+    .strike-btn input:checked + .btn-text {
       background: #0066ff !important;
       color: white !important;
       border-color: #0066ff;
-      font-weight: bold;
+    }
+    @media (max-width: 900px) {
+      #chart-grid-chart1 {
+        grid-template-columns: 1fr !important;
+      }
     }
   `;
   document.head.appendChild(style);
