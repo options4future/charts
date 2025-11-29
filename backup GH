@@ -367,139 +367,143 @@
 </div>
 
 
-
-  
 <!-- ✅ Chart 1 -->
-<!-- Chart 1 - OI-CCOI-LVD Chart (FIXED & WORKING) -->
+<!-- ✅ Chart 1 -->
 <div id="chart1" class="tabcontent">
-  <h2>OI-CCOI-LVD Chart</h2>
-
+  <h2>OI-CCOI-LVDChart</h2>
+  
   <div class="legend">
     <span><span class="legend-box solid-blue"></span> Call OI</span>
     <span><span class="legend-box solid-red"></span> Put OI</span>
     <span><span class="legend-box dotted-blue"></span> Change OI - Call</span>
     <span><span class="legend-box dotted-red"></span> Change OI - Put</span>
-    <span><span class="legend-box light-green"></span> CVD (Call)</span>
-    <span><span class="legend-box light-red"></span> PVD (Put)</span>
+    <span><span class="legend-box light-green"></span> LTP - LVD(Call)</span>
+    <span><span class="legend-box light-red"></span> LTP - LVD(Put)</span>
   </div>
 
-  <div style="margin:15px 0; text-align:center;">
-    <button onclick="selectAllChart1(true)" style="padding:8px 16px; font-size:16px;">Select All</button>
-    <button onclick="selectAllChart1(false)" style="padding:8px 16px; margin-left:10px; font-size:16px;">Deselect All</button>
+  <div style="margin: 10px 0;">
+    <button onclick="selectAllChart1(true)">✅ Select All</button>
+    <button onclick="selectAllChart1(false)">❌ Deselect All</button>
   </div>
 
-  <div id="checkboxes-chart1" style="display:flex; flex-wrap:wrap; gap:12px; justify-content:center; margin-bottom:20px;"></div>
+  <div id="checkboxes-chart1" class="checkboxes" style="margin-bottom:15px; display:flex; flex-wrap: wrap; gap:10px;"></div>
   <div id="chart-grid-chart1" class="chart-grid"></div>
 </div>
 
-<script>
-// Self-executing function → runs immediately, no DOMContentLoaded issues
-(function() {
-  const charts1 = { 
-  // 24800: ""803193799"",
-    // 24850: ""1774106736"",
-    // 24900: ""706793629"",
-    // 24950: ""2094820521"",
-    // 25000: ""1104113578"",
-    // 25050: ""1744028156"",
-    // 25100: ""1418383130"",
-    // 25150: ""1770092151"",
-    // 25200: ""199112051"",
-    // 25250: ""952474926"",
-    // 25300: ""2025273832"",
-    // 25350: ""385681292"",
-    // 25400: ""1692038241"",
-    // 25450: ""313543024"",
-  25500: "1763013981",
-  25550: "831657942",
-  25600: "2063948723",
-  25650: "548923849",
-  25700: "575746495",
-  25750: "521346185",
-  25800: "1387283168",
-  25850: "2025182217",
-  25900: "236540291",
-  25950: "319939010",
-  26000: "2064959247",
-  26050: "1169910435"",
-  26100: "1540248194",
-  26150: "1130691669",
-  26200: "1302705504",
-  26250: "983537328",
-  26300: "1180687704",
-  26350: "857353960",
-  26400: "1083404014",
-    // 26450: ""1202010075"",
-    // 26500: ""894341899"",
-    // 26550: ""472808175"",
-    // 26600: ""1233756397"",
-    // 26650: ""1541263372"",
-    // 26700: ""1973965389"",
-    // 26750: ""606099251"",
-    // 26800: ""1224804094"",
-    // 26850: ""11506296"",
-    // 26900: ""101266446"",
-    // 26950: ""1712698988"",
-    // 27000: ""669780284"",
-    // 27050: ""795026390"",
-    // 27100: ""957993621"",
-    // 27150: ""82721718"",
-    // 27200: ""1803813806"",
-    // 27250: ""1424817088"",
+<script> 
+  const charts1 = {
+  25150: "803193799",
+  25200: "1774106736",
+  25250: "706793629",
+  25300: "2094820521",
+  25350: "1104113578",
+  25400: "1744028156",
+  25450: "1418383130",
+  25500: "1770092151",
+  25550: "199112051",
+  25600: "952474926",
+  25650: "2025273832",
+  25700: "385681292",
+  25750: "1692038241",
+  25800: "313543024",
+  25850: "1763013981",
+  25900: "831657942",
+  25950: "2063948723",
+  26000: "548923849",
+  26050: "575746495",
+  26100: "521346185",
+  26150: "1387283168",
+  26200: "2025182217",
+  26250: "236540291",
+  26300: "319939010",
+  26350: "2064959247",
+  26400: "1169910435",
+  26450: "1540248194",
+  26500: "1130691669",
+  26550: "1302705504",
+  26600: "983537328",
+  26650: "1180687704",
+  26700: "857353960",
+  26750: "1083404014",
+  26800: "1202010075",
+  26850: "894341899",
+  26900: "472808175",
+  26950: "1233756397",
+  27000: "1541263372",
+  27050: "1973965389",
+  27100: "606099251",
+  27150: "1224804094",
+  27200: "11506296",
+  27250: "101266446",
+  27300: "1712698988",
+  27350: "669780284",
+  27400: "795026390",
+  27450: "957993621",
+  27500: "82721718",
+  27550: "1803813806",
+  27600: "1424817088",
 };
 
-const baseURL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQwdBNIekjQua_YjtFzp4hCVs7XUHN4UilhgNG_wZy2w-gfFZUds2hr7lyqqrctXDQxtk9wKp3gRz_-/pubchart?format=interactive&oid=";
 
-  const checkContainer = document.getElementById('checkboxes-chart1');
-  const gridContainer  = document.getElementById('chart-grid-chart1');
+// const baseURL1 = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQwdBNIekjQua_YjtFzp4hCVs7XUHN4UilhgNG_wZy2w-gfFZUds2hr7lyqqrctXDQxtk9wKp3gRz_-/pubchart?oid=857353960&format=interactive&oid=";
 
-  Object.entries(charts1).forEach(([strike, oid]) => {
-    // ——— Checkbox ———
-    const label = document.createElement('label');
-    label.innerHTML = `<input type="checkbox" id="cb-${strike}" checked> ${strike}`;
-    label.style.cssText = 'font-size:14px Arial; margin:0 8px 8px 0; cursor:pointer;';
-    checkContainer.appendChild(label);
+const baseURL1 = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQwdBNIekjQua_YjtFzp4hCVs7XUHN4UilhgNG_wZy2w-gfFZUds2hr7lyqqrctXDQxtk9wKp3gRz_-/pubchart?format=interactive&oid=";
+                 
+  
+const checkboxContainer1 = document.getElementById("checkboxes-chart1");
+const chartContainer1 = document.getElementById("chart-grid-chart1");
 
-    // ——— Chart wrapper ———
-    const wrapper = document.createElement('div');
-    wrapper.id = `wrap-${strike}`;
-    wrapper.style.marginBottom = '40px';
+Object.entries(charts1).forEach(([strike, oid]) => {
+  // ✅ Checkbox with label
+  const cbLabel = document.createElement("label");
+  cbLabel.innerHTML = `
+    <input type="checkbox" id="cb1-strike${strike}" onchange="toggleChart1('${strike}')" checked>
+    ${strike}
+  `;
+  checkboxContainer1.appendChild(cbLabel);
 
-    const title = document.createElement('h3');
-    title.textContent = `Strike ${strike}`;
-    title.style.cssText = 'text-align:center; margin:0 0 10px 0; color:#1976d2;';
+  // ✅ Wrapper div
+  const wrapper = document.createElement("div");
+  wrapper.id = `wrapper1-${strike}`;
+  wrapper.style.marginBottom = "25px";
 
-    const iframe = document.createElement('iframe');
-    iframe.src = baseURL + oid;
-    iframe.style.width = '100%';
-    iframe.style.height = '460px';
-    iframe.style.border = 'none';
-    iframe.loading = 'lazy';
+  // ✅ Title
+  const title = document.createElement("h3");
+  title.innerText = `Strike ${strike}`;
+  title.style.textAlign = "center";
+  title.style.marginBottom = "8px";
 
-    wrapper.appendChild(title);
-    wrapper.appendChild(iframe);
-    gridContainer.appendChild(wrapper);
+  // ✅ Chart iframe
+  const iframe = document.createElement("iframe");
+  iframe.id = `strike1-${strike}`;
+  iframe.src = `${baseURL1}${oid}`;
+  iframe.style.width = "100%";
+  iframe.style.height = "400px";
 
-    // ——— Toggle on checkbox change ———
-    label.querySelector('input').addEventListener('change', function() {
-      wrapper.style.display = this.checked ? 'block' : 'none';
-    });
+  wrapper.appendChild(title);
+  wrapper.appendChild(iframe);
+  chartContainer1.appendChild(wrapper);
+});
+
+function toggleChart1(strike) {
+  const checkbox = document.getElementById(`cb1-strike${strike}`);
+  const wrapper = document.getElementById(`wrapper1-${strike}`);
+  wrapper.style.display = checkbox.checked ? "block" : "none";
+}
+
+function selectAllChart1(state) {
+  Object.keys(charts1).forEach(strike => {
+    const checkbox = document.getElementById(`cb1-strike${strike}`);
+    checkbox.checked = state;
+    toggleChart1(strike);
   });
+}
 
-  // ——— Select / Deselect All (global function) ———
-  window.selectAllChart1 = function(show) {
-    Object.keys(charts1).forEach(strike => {
-      const cb = document.getElementById('cb-' + strike);
-      if (cb) cb.checked = show;
-      const w = document.getElementById('wrap-' + strike);
-      if (w) w.style.display = show ? 'block' : 'none';
-    });
-  };
-
-  // Show all charts by default when the tab is opened
-  selectAllChart1(true);
-})();
+// ✅ Deselect all on load
+window.addEventListener("DOMContentLoaded", () => selectAllChart1(false));
 </script>
+
+
   
   <!-- 
 
@@ -1172,3 +1176,4 @@ let currentTab = 0;
 </script>
 </body>
 </html>
+
